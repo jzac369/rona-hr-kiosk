@@ -1203,7 +1203,7 @@ renderPositionOptions();
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, setDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, setDoc, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2hwcnzcZ1BozqQ9qMgF5b1e3Fkf9YtCI",
@@ -1255,6 +1255,10 @@ onAuthStateChanged(auth, user=>{
     $('adminStatus').innerHTML = 'Prihlásený: ' + user.email;
     $('editToggleWrap').style.display='flex';
     $('adminNavLi').style.display='block';
+    seedContentIfEmpty('content_positions', POSITIONS);
+    seedContentIfEmpty('content_benefits', BENEFITS);
+    seedContentIfEmpty('content_faq', FAQS);
+    seedContentIfEmpty('content_contacts', CONTACTS);
   } else {
     $('adminLinkIcon').textContent = '🔒';
     $('adminLinkLabel').textContent = t('admin.login');
@@ -1452,6 +1456,18 @@ async function seedExampleData(){
 }
 
 /* ================= ACTIVITY LOG ================= */
+async function seedContentIfEmpty(colName, arr){
+  try{
+    const snap = await getDocs(collection(db,colName));
+    if(snap.empty && arr.length>0){
+      for(const item of arr.slice()){
+        const {id, ...data} = item;
+        await addDoc(collection(db,colName), data);
+      }
+      await logActivity('seed', colName, `Predvolený obsah automaticky prenesený do databázy (${arr.length} položiek)`);
+    }
+  }catch(e){ /* seeding must never break the app */ }
+}
 async function logActivity(action, entity, summary){
   try{
     await addDoc(collection(db,'activity_log'), {
@@ -1614,7 +1630,7 @@ function renderCmsFaq(){
   const inner = document.getElementById('faqListInner');
   inner.innerHTML = FAQS.map((f,i)=>`
     <div class="cms-list-item"><div class="info"><h5>${f.q}</h5><p>${f.a||''}</p></div>
-    <div class="actions"><button data-faq-edit="${f.id||i}">✎</button><button data-faq-del="${f.id||i}">✕</button></div></div>`).join('') || '<div class="onb-empty-msg">Zatiaľ žiadne otázky.</div>';
+    <div class="actions"><button data-faq-edit="${f.id}">✎</button><button data-faq-del="${f.id}">✕</button></div></div>`).join('') || '<div class="onb-empty-msg">Zatiaľ žiadne otázky.</div>';
   inner.querySelectorAll('[data-faq-edit]').forEach(b=>b.addEventListener('click', ()=>openFaqEditor(b.dataset.faqEdit)));
   inner.querySelectorAll('[data-faq-del]').forEach(b=>b.addEventListener('click', async ()=>{
     if(!confirm('Odstrániť túto otázku?')) return;
