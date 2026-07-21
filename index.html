@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RONA — Kariéra | Informačný systém HR oddelenia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --maroon-900:#4A0F1B;
+  --maroon-800:#651726;
+  --maroon-700:#8A1F30;
+  --maroon-600:#A32638;
+  --maroon-500:#BE3448;
+  --maroon-400:#D45064;
+  --cream-050:#FBF7F1;
+  --cream-100:#F4E9E4;
+  --cream-200:#EBDAD3;
+  --gold-500:#C6992F;
+  --gold-400:#DDB65A;
+  --gold-100:#F3E4C3;
+  --ink-900:#2A211F;
+  --ink-700:#4A3D3A;
+  --ink-500:#7A6864;
+  --ink-300:#B3A29D;
+  --white:#FFFFFF;
+  --success:#2F7A4F;
+  --font-display:'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body:'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --sidebar-w:236px;
+  --scale:1;
+  --radius-lg:22px;
+  --radius-md:14px;
+  --radius-sm:8px;
+  --shadow-soft:0 10px 30px rgba(74,15,27,0.10);
+  --shadow-card:0 4px 16px rgba(74,15,27,0.08);
+}
+
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{height:100%; margin:0; overscroll-behavior:none;}
+body{
+  font-family:var(--font-body);
+  background:var(--cream-050);
+  color:var(--ink-900);
+  overflow:hidden;
+  user-select:none;
+  font-size:calc(16px * var(--scale));
+}
+img{-webkit-user-drag:none;}
+button{font-family:inherit; cursor:pointer;}
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--cream-200); border-radius:10px;}
+:focus-visible{outline:3px solid var(--gold-500); outline-offset:2px;}
+
+/* ============ APP SHELL ============ */
+.app{display:flex; height:100vh; width:100vw;}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+  width:var(--sidebar-w); flex:0 0 var(--sidebar-w);
+  background:linear-gradient(175deg, var(--maroon-900) 0%, var(--maroon-700) 100%);
+  color:var(--cream-050);
+  display:flex; flex-direction:column;
+  padding:28px 16px 20px;
+  position:relative;
+  z-index:5;
+}
+.sidebar::after{
+  content:''; position:absolute; top:0; right:0; bottom:0; width:6px;
+  background:linear-gradient(180deg, var(--gold-500), var(--gold-400), var(--gold-500));
+  opacity:0.85;
+}
+.brand{display:flex; flex-direction:column; align-items:center; padding:4px 6px 22px; border-bottom:1px solid rgba(255,255,255,0.14); margin-bottom:18px;}
+.brand img{width:76px; height:76px; object-fit:contain; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.25));}
+.brand .tag{font-size:0.62rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold-400); margin-top:10px; text-align:center; font-weight:600;}
+
+.nav{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; flex:1; overflow-y:auto;}
+.nav-item{
+  display:flex; align-items:center; gap:12px;
+  padding:13px 14px; border-radius:14px;
+  color:rgba(255,255,255,0.82); background:transparent; border:none;
+  font-size:0.87rem; font-weight:600; text-align:left; width:100%;
+  transition:background .18s ease, color .18s ease, transform .12s ease;
+  letter-spacing:0.01em;
+}
+.nav-item svg{width:20px; height:20px; flex:0 0 20px; opacity:0.9;}
+.nav-item:active{transform:scale(0.97);}
+.nav-item:hover{background:rgba(255,255,255,0.08); color:#fff;}
+.nav-item.active{background:rgba(255,255,255,0.16); color:#fff; box-shadow:inset 3px 0 0 var(--gold-400);}
+
+.sidebar-foot{border-top:1px solid rgba(255,255,255,0.14); padding-top:16px; margin-top:10px;}
+.clock{font-family:var(--font-display); font-size:1.7rem; font-weight:700; line-height:1; color:#fff;}
+.date{font-size:0.7rem; color:var(--gold-100); opacity:0.85; margin-top:6px; text-transform:capitalize;}
+
+/* ---------- MAIN ---------- */
+.main{flex:1; display:flex; flex-direction:column; min-width:0; height:100vh;}
+.topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 34px 16px; flex:0 0 auto;
+}
+.topbar .crumb{font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--maroon-600); font-weight:700;}
+.topbar h1{font-family:var(--font-display); font-size:1.85rem; margin:2px 0 0; color:var(--ink-900); font-weight:800;}
+.a11y{display:flex; gap:8px; align-items:center;}
+.a11y button{
+  width:38px; height:38px; border-radius:10px; border:1.5px solid var(--cream-200);
+  background:#fff; color:var(--maroon-700); font-weight:800; font-size:0.85rem;
+}
+.a11y button:hover{background:var(--cream-100);}
+
+.view{flex:1; overflow-y:auto; padding:6px 34px 40px; display:none;}
+.view.active{display:block; animation:fadeUp .35s ease;}
+@keyframes fadeUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+@media (prefers-reduced-motion: reduce){.view.active{animation:none;} *{transition:none !important; animation-duration:0.001s !important;}}
+
+/* ============ STAR MOTIF ============ */
+.star-row{display:flex; align-items:flex-end; justify-content:center; gap:10px; margin:0 0 6px;}
+.star-row svg{fill:var(--gold-500);}
+.star-row svg:nth-child(1),.star-row svg:nth-child(5){width:15px; height:15px; margin-bottom:2px;}
+.star-row svg:nth-child(2),.star-row svg:nth-child(4){width:19px; height:19px;}
+.star-row svg:nth-child(3){width:23px; height:23px; margin-bottom:3px;}
+
+/* ============ HOME ============ */
+.hero{
+  background:linear-gradient(135deg, var(--maroon-700), var(--maroon-600) 55%, var(--maroon-500));
+  border-radius:var(--radius-lg); padding:44px 44px 38px; color:#fff; position:relative; overflow:hidden;
+  box-shadow:var(--shadow-soft);
+}
+.hero::before{
+  content:''; position:absolute; inset:0;
+  background-image:radial-gradient(circle at 85% 20%, rgba(255,255,255,0.10), transparent 45%),
+                    radial-gradient(circle at 10% 90%, rgba(255,255,255,0.06), transparent 40%);
+}
+.hero-inner{position:relative; z-index:1; max-width:640px;}
+.hero .eyebrow{font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-100); font-weight:700; margin-bottom:10px;}
+.hero h2{font-family:var(--font-display); font-size:2.5rem; line-height:1.12; margin:0 0 14px; font-weight:800;}
+.hero p{font-size:1.02rem; line-height:1.55; color:rgba(255,255,255,0.9); margin:0 0 26px; max-width:520px;}
+.hero-ctas{display:flex; gap:14px; flex-wrap:wrap;}
+.btn{
+  border:none; border-radius:14px; padding:15px 26px; font-weight:700; font-size:0.95rem;
+  display:inline-flex; align-items:center; gap:10px; transition:transform .12s ease, box-shadow .2s ease;
+}
+.btn:active{transform:scale(0.96);}
+.btn-primary{background:var(--gold-500); color:var(--maroon-900); box-shadow:0 8px 20px rgba(198,153,47,0.35);}
+.btn-primary:hover{background:var(--gold-400);}
+.btn-ghost{background:rgba(255,255,255,0.12); color:#fff; border:1.5px solid rgba(255,255,255,0.5);}
+.btn-ghost:hover{background:rgba(255,255,255,0.2);}
+.btn-outline{background:transparent; color:var(--maroon-700); border:1.5px solid var(--maroon-600);}
+.btn-outline:hover{background:var(--cream-100);}
+.btn-sm{padding:10px 16px; font-size:0.82rem; border-radius:10px;}
+
+.stat-strip{display:flex; gap:0; margin-top:34px; position:relative; z-index:1; flex-wrap:wrap;}
+.stat{padding:0 26px 0 0; margin-right:26px; border-right:1px solid rgba(255,255,255,0.25);}
+.stat:last-child{border-right:none;}
+.stat b{display:block; font-family:var(--font-display); font-size:1.7rem; font-weight:800;}
+.stat span{font-size:0.72rem; color:rgba(255,255,255,0.75); text-transform:uppercase; letter-spacing:0.06em;}
+
+.section-head{display:flex; align-items:baseline; justify-content:space-between; margin:38px 0 18px;}
+.section-head h3{font-family:var(--font-display); font-size:1.5rem; margin:0; color:var(--ink-900); font-weight:800;}
+.section-head .link{color:var(--maroon-600); font-weight:700; font-size:0.85rem; background:none; border:none;}
+
+.quick-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+.quick-card{
+  background:#fff; border:1.5px solid var(--cream-200); border-radius:var(--radius-md); padding:20px;
+  display:flex; flex-direction:column; gap:10px; box-shadow:var(--shadow-card);
+}
+.quick-card svg{width:26px; height:26px; color:var(--maroon-600);}
+.quick-card h4{margin:0; font-size:0.95rem; font-weight:700;}
+.quick-card p{margin:0; font-size:0.78rem; color:var(--ink-500); line-height:1.4;}
+
+/* ============ POSITIONS ============ */
+.filter-row{display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;}
+.chip{padding:9px 16px; border-radius:999px; border:1.5px solid var(--cream-200); background:#fff; font-size:0.8rem; font-weight:600; color:var(--ink-700);}
+.chip.active{background:var(--maroon-600); border-color:var(--maroon-600); color:#fff;}
+
+.pos-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
+.pos-card{
+  background:#fff; border-radius:var(--radius-md); border:1.5px solid var(--cream-200);
+  padding:22px 22px 20px; box-shadow:var(--shadow-card); display:flex; flex-direction:column; gap:12px; position:relative;
+}
+.pos-card .badge{
+  position:absolute; top:18px; right:18px; font-size:0.65rem; font-weight:800; letter-spacing:0.04em;
+  padding:5px 10px; border-radius:999px; text-transform:uppercase;
+}
+.badge.urgent{background:#FBE3E3; color:#B23434;}
+.badge.new{background:var(--gold-100); color:#8A6710;}
+.badge.entry{background:#E4F1E8; color:var(--success);}
+.pos-icon{width:46px; height:46px; border-radius:12px; background:var(--cream-100); display:flex; align-items:center; justify-content:center;}
+.pos-icon svg{width:24px; height:24px; color:var(--maroon-600);}
+.pos-card h4{font-family:var(--font-display); font-size:1.25rem; margin:0; font-weight:800;}
+.pos-card .desc{font-size:0.85rem; color:var(--ink-500); line-height:1.5; margin:0;}
+.pos-meta{display:flex; gap:16px; font-size:0.78rem; color:var(--ink-700); flex-wrap:wrap;}
+.pos-meta span{display:flex; align-items:center; gap:6px; font-weight:600;}
+.pos-meta svg{width:15px; height:15px; color:var(--maroon-600);}
+.pos-actions{display:flex; gap:10px; margin-top:6px;}
+
+/* modal */
+.modal-overlay{position:fixed; inset:0; background:rgba(42,33,31,0.55); display:none; align-items:center; justify-content:center; z-index:50; padding:30px;}
+.modal-overlay.active{display:flex;}
+.modal{background:#fff; border-radius:var(--radius-lg); max-width:640px; width:100%; max-height:88vh; overflow-y:auto; padding:36px; position:relative; box-shadow:0 30px 70px rgba(0,0,0,0.3);}
+.modal-close{position:absolute; top:18px; right:18px; width:36px; height:36px; border-radius:50%; border:none; background:var(--cream-100); font-size:1.1rem; color:var(--ink-700);}
+.modal h3{font-family:var(--font-display); font-size:1.7rem; margin:0 0 6px; font-weight:800;}
+.modal .modal-sub{color:var(--maroon-600); font-weight:700; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:18px;}
+.modal-block{margin-bottom:18px;}
+.modal-block h5{margin:0 0 8px; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-700);}
+.modal-block ul{margin:0; padding-left:18px; color:var(--ink-700); font-size:0.9rem; line-height:1.7;}
+.modal-block p{margin:0; color:var(--ink-700); font-size:0.92rem; line-height:1.6;}
+
+/* ============ PROCESS TIMELINE ============ */
+.timeline{display:flex; gap:0; position:relative; margin-top:10px;}
+.tl-step{flex:1; text-align:center; position:relative; padding:0 12px;}
+.tl-line{position:absolute; top:29px; left:calc(50% + 30px); right:calc(-50% + 30px); height:2px; background:var(--cream-200); z-index:0;}
+.tl-step:last-child .tl-line{display:none;}
+.tl-star{width:58px; height:58px; margin:0 auto 16px; border-radius:50%; background:linear-gradient(160deg, var(--maroon-600), var(--maroon-800)); display:flex; align-items:center; justify-content:center; position:relative; z-index:1; box-shadow:0 8px 18px rgba(138,31,48,0.3);}
+.tl-star svg{width:24px; height:24px; fill:var(--gold-400);}
+.tl-step h5{font-family:var(--font-display); font-size:1.02rem; margin:0 0 8px; font-weight:800;}
+.tl-step p{font-size:0.82rem; color:var(--ink-500); line-height:1.5; margin:0; padding:0 4px;}
+
+/* ============ BENEFITS ============ */
+.benefit-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+.benefit-card{background:#fff; border-radius:var(--radius-md); border:1.5px solid var(--cream-200); padding:22px; box-shadow:var(--shadow-card);}
+.benefit-card .bi{width:42px; height:42px; border-radius:11px; background:var(--maroon-600); display:flex; align-items:center; justify-content:center; margin-bottom:14px;}
+.benefit-card .bi svg{width:22px; height:22px; color:#fff;}
+.benefit-card h4{margin:0 0 8px; font-size:1rem; font-weight:800;}
+.benefit-card p{margin:0; font-size:0.82rem; color:var(--ink-500); line-height:1.5;}
+
+/* ============ ABOUT ============ */
+.about-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:30px; align-items:start;}
+.about-copy p{font-size:0.95rem; line-height:1.7; color:var(--ink-700); margin:0 0 16px;}
+.value-list{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px;}
+.value-item{background:#fff; border:1.5px solid var(--cream-200); border-radius:var(--radius-sm); padding:16px; font-size:0.85rem; font-weight:700; color:var(--ink-900); display:flex; gap:10px; align-items:center;}
+.value-item svg{width:18px; height:18px; color:var(--gold-500); flex:0 0 auto;}
+.illus-card{background:linear-gradient(160deg, var(--maroon-700), var(--maroon-900)); border-radius:var(--radius-lg); padding:30px; color:#fff; min-height:340px; display:flex; flex-direction:column; justify-content:space-between;}
+.illus-card svg{width:100%; height:170px;}
+.illus-card .quote{font-family:var(--font-display); font-size:1.15rem; line-height:1.5; font-weight:700; margin-top:14px;}
+.illus-card .quote-by{font-size:0.75rem; color:var(--gold-100); margin-top:8px; text-transform:uppercase; letter-spacing:0.06em;}
+
+/* ============ FAQ ============ */
+.faq-item{background:#fff; border:1.5px solid var(--cream-200); border-radius:var(--radius-md); margin-bottom:12px; overflow:hidden;}
+.faq-q{width:100%; text-align:left; padding:18px 22px; background:none; border:none; display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:0.94rem; color:var(--ink-900);}
+.faq-q svg{width:18px; height:18px; color:var(--maroon-600); transition:transform .25s ease; flex:0 0 auto; margin-left:14px;}
+.faq-item.open .faq-q svg{transform:rotate(135deg);}
+.faq-a{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+.faq-a p{margin:0; padding:0 22px 20px; font-size:0.88rem; color:var(--ink-500); line-height:1.6;}
+.faq-item.open .faq-a{max-height:220px;}
+
+/* ============ CONTACT ============ */
+.contact-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+.contact-card{background:#fff; border-radius:var(--radius-md); border:1.5px solid var(--cream-200); padding:24px; text-align:center; box-shadow:var(--shadow-card);}
+.avatar{width:64px; height:64px; border-radius:50%; background:linear-gradient(160deg, var(--maroon-500), var(--maroon-700)); margin:0 auto 14px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-weight:800; font-size:1.3rem;}
+.contact-card h4{margin:0 0 2px; font-size:1rem; font-weight:800;}
+.contact-card .role{font-size:0.76rem; color:var(--maroon-600); font-weight:700; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:12px;}
+.contact-card .line{font-size:0.85rem; color:var(--ink-700); margin:4px 0; display:flex; align-items:center; justify-content:center; gap:8px;}
+.contact-card .line svg{width:15px; height:15px; color:var(--maroon-600);}
+.info-strip{display:flex; gap:16px; margin-top:22px;}
+.info-box{flex:1; background:var(--cream-100); border-radius:var(--radius-md); padding:20px;}
+.info-box h5{margin:0 0 8px; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--maroon-700);}
+.info-box p{margin:0; font-size:0.88rem; color:var(--ink-700); line-height:1.6;}
+
+/* ============ FORM ============ */
+.form-wrap{display:grid; grid-template-columns:1.3fr 0.9fr; gap:28px; align-items:start;}
+.form-card{background:#fff; border-radius:var(--radius-lg); border:1.5px solid var(--cream-200); padding:32px; box-shadow:var(--shadow-card);}
+.form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;}
+.field{display:flex; flex-direction:column; gap:7px; margin-bottom:16px;}
+.field label{font-size:0.8rem; font-weight:700; color:var(--ink-700);}
+.field input, .field select, .field textarea{
+  border:1.5px solid var(--cream-200); border-radius:10px; padding:13px 14px; font-size:0.92rem; font-family:inherit; background:var(--cream-050); color:var(--ink-900);
+}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--maroon-500); background:#fff;}
+.field textarea{resize:none; min-height:80px;}
+.checkbox-row{display:flex; gap:12px; align-items:flex-start; margin:20px 0; padding:16px; background:var(--cream-050); border-radius:12px;}
+.checkbox-row input{margin-top:3px; width:18px; height:18px; accent-color:var(--maroon-600);}
+.checkbox-row label{font-size:0.8rem; color:var(--ink-700); line-height:1.5;}
+.side-help{background:var(--cream-100); border-radius:var(--radius-lg); padding:28px;}
+.side-help h4{font-family:var(--font-display); font-size:1.2rem; margin:0 0 14px; font-weight:800;}
+.side-help ol{margin:0; padding-left:20px; color:var(--ink-700); font-size:0.88rem; line-height:2;}
+.side-help .note{margin-top:18px; font-size:0.78rem; color:var(--ink-500); line-height:1.5; border-top:1px solid var(--cream-200); padding-top:16px;}
+
+.confirm-screen{display:none; text-align:center; padding:60px 20px; max-width:520px; margin:0 auto;}
+.confirm-screen.active{display:block; animation:fadeUp .4s ease;}
+.confirm-icon{width:88px; height:88px; border-radius:50%; background:var(--cream-100); display:flex; align-items:center; justify-content:center; margin:0 auto 24px;}
+.confirm-icon svg{width:42px; height:42px; color:var(--success);}
+.confirm-screen h3{font-family:var(--font-display); font-size:1.8rem; margin:0 0 12px; font-weight:800;}
+.confirm-screen p{color:var(--ink-500); font-size:0.95rem; line-height:1.6; margin:0 0 20px;}
+.ref-code{display:inline-block; background:var(--cream-100); border-radius:12px; padding:14px 26px; font-family:var(--font-display); font-size:1.3rem; font-weight:800; color:var(--maroon-700); letter-spacing:0.06em; margin-bottom:26px;}
+
+/* ============ SCREENSAVER ============ */
+.screensaver{position:fixed; inset:0; background:linear-gradient(160deg, var(--maroon-900), var(--maroon-700) 60%, var(--maroon-600)); z-index:100; display:none; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center;}
+.screensaver.active{display:flex;}
+.screensaver img{width:120px; margin-bottom:24px; opacity:0.95;}
+.screensaver h2{font-family:var(--font-display); font-size:2.4rem; font-weight:800; margin:0 0 12px;}
+.screensaver p{font-size:1rem; color:rgba(255,255,255,0.8); margin:0 0 40px;}
+.pulse-btn{padding:20px 40px; border-radius:999px; background:rgba(255,255,255,0.14); border:1.5px solid rgba(255,255,255,0.5); color:#fff; font-weight:700; font-size:1rem; animation:pulse 2.2s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,0.35);} 70%{box-shadow:0 0 0 22px rgba(255,255,255,0);} 100%{box-shadow:0 0 0 0 rgba(255,255,255,0);}}
+.ss-rotator{margin-top:36px; font-size:0.85rem; color:var(--gold-100); letter-spacing:0.04em;}
+
+/* footer */
+.footer-note{margin-top:40px; padding-top:18px; border-top:1px solid var(--cream-200); font-size:0.72rem; color:var(--ink-300); text-align:center;}
+
+@media (max-width:1180px){
+  .quick-grid{grid-template-columns:repeat(2,1fr);}
+  .pos-grid{grid-template-columns:1fr;}
+  .benefit-grid{grid-template-columns:repeat(2,1fr);}
+  .about-grid, .form-wrap{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="brand">
+      <img src="data:image/png;base64,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" alt="RONA logo">
+      <div class="tag">Kariéra v RONA</div>
+    </div>
+    <ul class="nav" id="navList">
+      <li><button class="nav-item active" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+        Domov</button></li>
+      <li><button class="nav-item" data-view="positions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+        Voľné pozície</button></li>
+      <li><button class="nav-item" data-view="apply">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Mám záujem</button></li>
+      <li><button class="nav-item" data-view="process">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Priebeh náboru</button></li>
+      <li><button class="nav-item" data-view="benefits">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4v13h16z"/><path d="M12 7v13M4 12h16"/><path d="M12 7c-1.5 0-3-1-3-2.6C9 3 10 2 11.2 2c1.4 0 1.8 1.4 1.8 2.4M12 7c1.5 0 3-1 3-2.6C15 3 14 2 12.8 2c-1.4 0-1.8 1.4-1.8 2.4"/></svg>
+        Benefity</button></li>
+      <li><button class="nav-item" data-view="about">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-6h6v6"/></svg>
+        O spoločnosti</button></li>
+      <li><button class="nav-item" data-view="faq">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.7-2.2 2-2.4 3.5"/><path d="M12 17h.01"/></svg>
+        Časté otázky</button></li>
+      <li><button class="nav-item" data-view="contact">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        Kontakt HR</button></li>
+    </ul>
+    <div class="sidebar-foot">
+      <div class="clock" id="clock">--:--</div>
+      <div class="date" id="dateStr">—</div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb" id="crumb">HR Centrum</div>
+        <h1 id="pageTitle">Vitajte v RONA</h1>
+      </div>
+      <div class="a11y">
+        <button id="fontDown" title="Zmenšiť text">A-</button>
+        <button id="fontUp" title="Zväčšiť text">A+</button>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <section class="view active" id="view-home">
+      <div class="hero">
+        <div class="hero-inner">
+          <div class="eyebrow">Sklárska tradícia • Ľudia z Lednických Rovní</div>
+          <h2>Poďte tvoriť sklo, ktoré vydrží generácie.</h2>
+          <p>RONA hľadá šikovné ruky aj ostré hlavy — do výroby, prevádzky aj administratívy. Pozrite si aktuálne voľné pozície alebo nám rovno zanechajte kontakt a ozveme sa vám.</p>
+          <div class="hero-ctas">
+            <button class="btn btn-primary" data-view="positions">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              Pozrieť voľné pozície</button>
+            <button class="btn btn-ghost" data-view="apply">Mám záujem o prácu</button>
+          </div>
+          <div class="stat-strip">
+            <div class="stat"><b>8</b><span>otvorených pozícií</span></div>
+            <div class="stat"><b>3</b><span>zmenné prevádzky</span></div>
+            <div class="stat"><b>5</b><span>krokov do nástupu</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head"><h3>Rýchle skratky</h3></div>
+      <div class="quick-grid">
+        <div class="quick-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4v13h16z"/><path d="M12 7v13M4 12h16"/></svg>
+          <h4>Benefity zamestnancov</h4>
+          <p>Stravovanie, doprava, 13. plat a ďalšie výhody.</p>
+          <button class="btn btn-outline btn-sm" data-view="benefits">Zobraziť</button>
+        </div>
+        <div class="quick-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <h4>Ako prebieha nábor</h4>
+          <p>Od prihlásenia po prvý pracovný deň v 5 krokoch.</p>
+          <button class="btn btn-outline btn-sm" data-view="process">Zobraziť</button>
+        </div>
+        <div class="quick-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.7-2.2 2-2.4 3.5"/><path d="M12 17h.01"/></svg>
+          <h4>Časté otázky</h4>
+          <p>Vek, prax, zmennosť, brigády a iné odpovede.</p>
+          <button class="btn btn-outline btn-sm" data-view="faq">Zobraziť</button>
+        </div>
+        <div class="quick-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <h4>Potrebujete poradiť?</h4>
+          <p>Kontaktujte HR tím osobne alebo telefonicky.</p>
+          <button class="btn btn-outline btn-sm" data-view="contact">Zobraziť</button>
+        </div>
+      </div>
+
+      <div class="footer-note">RONA a.s. · Informačný systém HR oddelenia · Vaše údaje spracúvame v súlade s GDPR</div>
+    </section>
+
+    <!-- POSITIONS -->
+    <section class="view" id="view-positions">
+      <div class="filter-row" id="filterRow">
+        <button class="chip active" data-filter="all">Všetky pozície</button>
+        <button class="chip" data-filter="vyroba">Výroba</button>
+        <button class="chip" data-filter="technicke">Technické</button>
+        <button class="chip" data-filter="ostatne">Ostatné</button>
+      </div>
+      <div class="pos-grid" id="posGrid"></div>
+      <div class="footer-note">Zoznam pozícií sa priebežne aktualizuje. Presné podmienky upresní HR pri osobnom pohovore.</div>
+    </section>
+
+    <!-- APPLY -->
+    <section class="view" id="view-apply">
+      <div class="form-wrap" id="formWrap">
+        <div class="form-card">
+          <form id="applyForm">
+            <div class="form-row">
+              <div class="field"><label>Meno *</label><input type="text" id="fMeno" required placeholder="Vaše meno"></div>
+              <div class="field"><label>Priezvisko *</label><input type="text" id="fPriezvisko" required placeholder="Vaše priezvisko"></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label>Telefón *</label><input type="tel" id="fTelefon" required placeholder="+421 9__ ___ ___"></div>
+              <div class="field"><label>E-mail</label><input type="email" id="fEmail" placeholder="vas@email.sk"></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label>Pozícia, o ktorú mám záujem *</label>
+                <select id="fPozicia" required>
+                  <option value="">Vyberte pozíciu</option>
+                </select>
+              </div>
+              <div class="field"><label>Preferovaná zmennosť</label>
+                <select id="fZmena">
+                  <option value="">Nezáleží</option>
+                  <option>Jednozmenná</option>
+                  <option>Dvojzmenná</option>
+                  <option>Trojzmenná / nepretržitá</option>
+                </select>
+              </div>
+            </div>
+            <div class="field"><label>Poznámka (nepovinné)</label><textarea id="fPoznamka" placeholder="Napr. odkedy môžete nastúpiť, prax, otázky..."></textarea></div>
+            <div class="checkbox-row">
+              <input type="checkbox" id="fGdpr" required>
+              <label for="fGdpr">Súhlasím so spracovaním mojich osobných údajov spoločnosťou RONA a.s. na účely výberového konania, v súlade so zásadami ochrany osobných údajov (GDPR). Súhlas môžem kedykoľvek odvolať. *</label>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Odoslať záujem o pozíciu</button>
+          </form>
+        </div>
+        <div class="side-help">
+          <h4>Ako to funguje</h4>
+          <ol>
+            <li>Vyplníte krátky formulár priamo na tablete</li>
+            <li>Vaše údaje prevezme HR oddelenie ešte v ten istý deň</li>
+            <li>Ozveme sa vám telefonicky do 3 pracovných dní</li>
+            <li>Dohodneme si osobné stretnutie a prehliadku prevádzky</li>
+          </ol>
+          <div class="note">Formulár môžete vyplniť aj bez e-mailovej adresy — stačí telefónne číslo. Ak potrebujete pomôcť s vyplnením, obráťte sa na kolegov na recepcii HR oddelenia.</div>
+        </div>
+      </div>
+
+      <div class="confirm-screen" id="confirmScreen">
+        <div class="confirm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg></div>
+        <h3>Ďakujeme, záujem sme prijali!</h3>
+        <p>Vaše údaje sme odovzdali HR oddeleniu RONA. Ozveme sa vám telefonicky najneskôr do 3 pracovných dní.</p>
+        <div class="ref-code" id="refCode">RONA-000000</div>
+        <div><button class="btn btn-outline" id="backHomeBtn">Späť na domovskú obrazovku</button></div>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="view" id="view-process">
+      <div class="star-row">
+        <svg viewBox="0 0 24 24"><path d="M12 1l2.6 6.9L22 9l-5.5 4.8L18 22l-6-3.8L6 22l1.5-8.2L2 9l7.4-1.1z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 1l2.6 6.9L22 9l-5.5 4.8L18 22l-6-3.8L6 22l1.5-8.2L2 9l7.4-1.1z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 1l2.6 6.9L22 9l-5.5 4.8L18 22l-6-3.8L6 22l1.5-8.2L2 9l7.4-1.1z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 1l2.6 6.9L22 9l-5.5 4.8L18 22l-6-3.8L6 22l1.5-8.2L2 9l7.4-1.1z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 1l2.6 6.9L22 9l-5.5 4.8L18 22l-6-3.8L6 22l1.5-8.2L2 9l7.4-1.1z"/></svg>
+      </div>
+      <div class="section-head" style="justify-content:center; margin-top:6px;"><h3>Päť krokov k novej práci v RONA</h3></div>
+      <div class="timeline">
+        <div class="tl-step"><div class="tl-line"></div><div class="tl-star"><svg viewBox="0 0 24 24"><path d="M12 1l2.6 6.9L22 9l-5.5 4.8L18 22l-6-3.8L6 22l1.5-8.2L2 9l7.4-1.1z"/></svg></div>
+          <h5>Prihlásenie záujmu</h5><p>Cez tablet, telefonicky alebo online — vyberiete si, čo vám vyhovuje.</p></div>
+        <div class="tl-step"><div class="tl-line"></div><div class="tl-star"><svg viewBox="0 0 24 24"><path d="M12 1l2.6 6.9L22 9l-5.5 4.8L18 22l-6-3.8L6 22l1.5-8.2L2 9l7.4-1.1z"/></svg></div>
+          <h5>Telefonický pohovor</h5><p>Krátky rozhovor s HR o vašich skúsenostiach a predstavách.</p></div>
+        <div class="tl-step"><div class="tl-line"></div><div class="tl-star"><svg viewBox="0 0 24 24"><path d="M12 1l2.6 6.9L22 9l-5.5 4.8L18 22l-6-3.8L6 22l1.5-8.2L2 9l7.4-1.1z"/></svg></div>
+          <h5>Osobné stretnutie</h5><p>Návšteva prevádzky, spoznáte tím aj konkrétnu pracovnú pozíciu.</p></div>
+        <div class="tl-step"><div class="tl-line"></div><div class="tl-star"><svg viewBox="0 0 24 24"><path d="M12 1l2.6 6.9L22 9l-5.5 4.8L18 22l-6-3.8L6 22l1.5-8.2L2 9l7.4-1.1z"/></svg></div>
+          <h5>Vstupná prehliadka</h5><p>Zdravotná spôsobilosť na výkon danej pracovnej pozície.</p></div>
+        <div class="tl-step"><div class="tl-star"><svg viewBox="0 0 24 24"><path d="M12 1l2.6 6.9L22 9l-5.5 4.8L18 22l-6-3.8L6 22l1.5-8.2L2 9l7.4-1.1z"/></svg></div>
+          <h5>Nástup a zaškolenie</h5><p>Podpis zmluvy, uvítací deň a sprevádzanie skúseným kolegom.</p></div>
+      </div>
+      <div class="section-head"><h3>Dobré vedieť pred pohovorom</h3></div>
+      <div class="quick-grid">
+        <div class="quick-card"><h4>Čo si priniesť</h4><p>Občiansky preukaz, prípadne doklady o vzdelaní alebo praxi.</p></div>
+        <div class="quick-card"><h4>Trvanie procesu</h4><p>Od prihlásenia po nástup zvyčajne 1 – 3 týždne.</p></div>
+        <div class="quick-card"><h4>Obuv a odev</h4><p>Na prehliadku prevádzky odporúčame pevnú, uzavretú obuv.</p></div>
+        <div class="quick-card"><h4>Otázky vopred</h4><p>Radi zodpovieme čokoľvek — pozrite si aj sekciu FAQ.</p></div>
+      </div>
+    </section>
+
+    <!-- BENEFITS -->
+    <section class="view" id="view-benefits">
+      <div class="section-head"><h3>Prečo pracovať v RONA</h3></div>
+      <div class="benefit-grid" id="benefitGrid"></div>
+      <div class="footer-note">Konkrétny rozsah benefitov závisí od pracovnej pozície a dĺžky pracovného pomeru. Detaily radi vysvetlíme na osobnom pohovore.</div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="view" id="view-about">
+      <div class="about-grid">
+        <div class="about-copy">
+          <h3 style="font-family:var(--font-display); font-size:1.5rem; font-weight:800; margin:0 0 14px;">RONA — sklo s charakterom</h3>
+          <p>V Lednických Rovniach vyrábame úžitkové a dekoratívne sklo, ktoré nájdete na stoloch aj v domácnostiach po celom Slovensku i v zahraničí. Remeslo spájame s modernou technológiou a hlavne — so skúsenými ľuďmi, bez ktorých by to jednoducho nešlo.</p>
+          <p>Sme prevádzka, kde sa stretáva tradičné sklárske remeslo (fúkanie a tvarovanie skla) s presnou strojovou výrobou. Práve preto hľadáme veľmi rôznorodé profesie — od sklárov cez strojníkov až po administratívu.</p>
+          <p>Väčšina našich kolegov je z Piešťan, Lednických Rovní a okolia. Zaučenie zvládnete aj bez predchádzajúcej praxe v sklárstve — základné zručnosti vás naučíme priamo na mieste.</p>
+          <div class="value-list">
+            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Remeslo a tradícia</div>
+            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Bezpečnosť na prvom mieste</div>
+            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Stabilita a istota práce</div>
+            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Rast a zaučenie na mieste</div>
+          </div>
+        </div>
+        <div class="illus-card">
+          <svg viewBox="0 0 200 120" fill="none" stroke="#F3E4C3" stroke-width="1.6">
+            <path d="M60 15 L75 15 L75 45 Q75 60 90 68 L90 95 Q90 105 80 105 L55 105 Q45 105 45 95 L45 68 Q60 60 60 45 Z"/>
+            <ellipse cx="65" cy="105" rx="22" ry="4"/>
+            <circle cx="130" cy="40" r="20" stroke-dasharray="3 4"/>
+            <path d="M130 20 v-8 M130 68 v-8 M110 40 h-8 M158 40 h8"/>
+          </svg>
+          <div>
+            <div class="quote">„Každý kus skla má svoj príbeh — a väčšinu z neho napíšu ruky našich ľudí.“</div>
+            <div class="quote-by">— tím RONA</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="view" id="view-faq">
+      <div class="section-head"><h3>Časté otázky uchádzačov</h3></div>
+      <div id="faqList"></div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="view" id="view-contact">
+      <div class="section-head"><h3>HR oddelenie RONA</h3></div>
+      <div class="contact-grid" id="contactGrid"></div>
+      <div class="info-strip">
+        <div class="info-box">
+          <h5>Adresa</h5>
+          <p>RONA a.s., Štúrova 962/128, 020 01 Lednické Rovne</p>
+        </div>
+        <div class="info-box">
+          <h5>Úradné hodiny HR</h5>
+          <p>Pondelok – Piatok: 7:00 – 15:00<br>Streda: 7:00 – 17:00 (predĺžené hodiny)</p>
+        </div>
+        <div class="info-box">
+          <h5>Rýchly kontakt</h5>
+          <p>+421 42 xxx xx xx<br>kariera@rona.sk</p>
+        </div>
+      </div>
+      <div class="footer-note">Tip: formulár záujmu môžete vyplniť priamo na tomto tablete v sekcii „Mám záujem“.</div>
+    </section>
+
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- SCREENSAVER -->
+<div class="screensaver" id="screensaver">
+  <img src="data:image/png;base64,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" alt="RONA">
+  <h2>Hľadáme nových kolegov</h2>
+  <p>Dotknite sa obrazovky a pozrite si voľné pozície</p>
+  <div class="pulse-btn">Dotknite sa pre pokračovanie</div>
+  <div class="ss-rotator" id="ssRotator">8 voľných pozícií • Sklár • Strojník • Administratíva</div>
+</div>
+
+<script>
+/* ============ DATA ============ */
+const POSITIONS = [
+  {id:'sklar', cat:'vyroba', name:'Sklár', badge:'urgent', badgeText:'Súrne hľadáme',
+   desc:'Ručné a poloautomatické tvarovanie horúceho skla priamo pri peci. Kľúčové remeslo výroby.',
+   req:['Manuálna zručnosť a fyzická kondícia','Ochota pracovať v teplejšom prostredí pri peci','Prax vítaná, nie je podmienkou — zaučíme'],
+   offer:['1 150 – 1 500 € / mesiac (brutto)','Trojzmenná prevádzka','Príplatky za zmennosť a nadčasy'],
+   icon:'flame'},
+  {id:'zoradovac', cat:'technicke', name:'Zoraďovač strojov', badge:'new', badgeText:'Nová pozícia',
+   desc:'Nastavovanie, zoraďovanie a drobná údržba výrobných liniek počas prevádzky.',
+   req:['SŠ technického smeru výhodou','Technická zručnosť, čítanie výkresov','Zodpovednosť a presnosť'],
+   offer:['1 200 – 1 550 € / mesiac (brutto)','Dvoj až trojzmenná prevádzka','Príspevok na ďalšie vzdelávanie'],
+   icon:'gear'},
+  {id:'odnasnik', cat:'vyroba', name:'Odnášač výrobkov', badge:'entry', badgeText:'Bez skúseností',
+   desc:'Manipulácia s hotovými výrobkami po vyfúknutí, kontrola kvality a príprava na balenie.',
+   req:['Fyzická zdatnosť','Zmysel pre poriadok a pozornosť na detail','Prax nie je potrebná'],
+   offer:['950 – 1 150 € / mesiac (brutto)','Trojzmenná prevádzka','Rýchly nástup možný'],
+   icon:'box'},
+  {id:'strojnik', cat:'vyroba', name:'Strojník výroby', badge:'', badgeText:'',
+   desc:'Obsluha výrobných strojov, sledovanie parametrov výroby a základná údržba zariadenia.',
+   req:['Technické zmýšľanie','Zodpovedný prístup k bezpečnosti práce','Zaučenie zabezpečíme'],
+   offer:['1 050 – 1 300 € / mesiac (brutto)','Trojzmenná prevádzka','Bonusy za kvalitu výroby'],
+   icon:'cog'},
+  {id:'upratovacka', cat:'ostatne', name:'Upratovačka / Upratovač', badge:'entry', badgeText:'Bez skúseností',
+   desc:'Údržba čistoty výrobných hál, spoločných priestorov a administratívnej budovy.',
+   req:['Spoľahlivosť a dôslednosť','Ochota pracovať aj v ranných hodinách','Prax nie je podmienkou'],
+   offer:['850 – 1 000 € / mesiac (brutto)','Jedno až dvojzmenná prevádzka','Skrátený úväzok možný'],
+   icon:'sparkle'},
+  {id:'skladnik', cat:'ostatne', name:'Skladník / Manipulant', badge:'', badgeText:'',
+   desc:'Príjem, výdaj a evidencia tovaru na sklade, práca s manipulačnou technikou.',
+   req:['Preukaz na VZV výhodou (možno doškoliť)','Precíznosť pri evidencii tovaru','Základy práce s PC'],
+   offer:['1 000 – 1 250 € / mesiac (brutto)','Jedno až dvojzmenná prevádzka','Príspevok na dopravu'],
+   icon:'box'},
+  {id:'udrzbar', cat:'technicke', name:'Údržbár (elektro/mechanik)', badge:'urgent', badgeText:'Súrne hľadáme',
+   desc:'Preventívna a operatívna údržba výrobných strojov a technológií v prevádzke.',
+   req:['Vyučenie v odbore elektro alebo mechanik','Elektrotechnická spôsobilosť výhodou','Servisné a diagnostické zručnosti'],
+   offer:['1 250 – 1 600 € / mesiac (brutto)','Pohotovosti príplatkované','Firemné náradie a vybavenie'],
+   icon:'wrench'},
+  {id:'admin', cat:'ostatne', name:'Administratívna pozícia (HR / ekonomika)', badge:'new', badgeText:'Nová pozícia',
+   desc:'Podpora HR alebo ekonomického úseku — evidencia, komunikácia, práca s dokumentmi.',
+   req:['SŠ / VŠ vzdelanie','Znalosť MS Office (Word, Excel)','Komunikatívnosť a organizačné schopnosti'],
+   offer:['1 050 – 1 350 € / mesiac (brutto)','Jednozmenná prevádzka, pružný začiatok','Možnosť čiastočného home office'],
+   icon:'doc'}
+];
+
+const ICONS = {
+  flame:'<path d="M12 2c1 3-2 4-2 7a4 4 0 0 0 8 0c0-1-1-2-1-2 1 4-1 6-3 6a5 5 0 0 1-5-5c0-3 3-4 3-6z"/><path d="M8 15a4 4 0 0 0 8 0"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9c.1.7.5 1.3 1.1 1.5.2.1.4.1.6.2H21a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1z"/>',
+  box:'<path d="M21 8 12 3 3 8l9 5 9-5Z"/><path d="M3 8v9l9 5 9-5V8"/><path d="M12 13v9"/>',
+  cog:'<circle cx="12" cy="12" r="3"/><path d="M12 5V3M12 21v-2M5 12H3M21 12h-2M6.5 6.5 5 5M19 19l-1.5-1.5M6.5 17.5 5 19M19 5l-1.5 1.5"/>',
+  sparkle:'<path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z"/>',
+  wrench:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2z"/>',
+  doc:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/>'
+};
+
+const BENEFITS = [
+  {icon:'meal', title:'Stravovanie nad rámec zákona', text:'Príspevok na stravu vyšší, než ukladá zákon, priamo na stravovacej karte.'},
+  {icon:'bus', title:'Príspevok na dopravu', text:'Prispievame zamestnancom dochádzajúcim z okolitých obcí a miest.'},
+  {icon:'gift', title:'13. plat', text:'Mimoriadna odmena vyplácaná zamestnancom po splnení podmienok.'},
+  {icon:'sun', title:'Príspevok na rekreáciu', text:'Podpora dovolenky na Slovensku podľa zákonných podmienok.'},
+  {icon:'heart', title:'Zdravie a wellness', text:'Príspevok na multišportovú kartu alebo pohybové aktivity.'},
+  {icon:'book', title:'Zaškolenie a rozvoj', text:'Odborné zaučenie na pracovisku aj možnosť ďalšieho vzdelávania.'},
+  {icon:'users', title:'Firemné akcie', text:'Teambuildingy, letné a vianočné akcie pre zamestnancov a rodiny.'},
+  {icon:'calendar', title:'Predĺžená dovolenka', text:'Dodatočné dni dovolenky nad zákonný rámec podľa odpracovaných rokov.'},
+  {icon:'shield', title:'Príspevok na dôchodkové sporenie', text:'Prispievame na doplnkové dôchodkové sporenie (III. pilier).'}
+];
+const BICONS = {
+  meal:'<path d="M6 2v8a2 2 0 0 0 4 0V2M8 10v12M18 2v20M18 2a4 4 0 0 0-4 4v3h4"/>',
+  bus:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="18" r="1.6"/><path d="M3 12h18"/>',
+  gift:'<rect x="4" y="9" width="16" height="11" rx="1"/><path d="M4 9h16M12 9v11M12 9c-2-4-6-3-6 0s4 1 6 0c2 1 6 1 6-2s-4-2-6 2z"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>',
+  heart:'<path d="M12 21s-7-4.4-9.5-9C.6 8.5 2 4 6 4c2.2 0 3.6 1.3 4.5 2.5C11.4 5.3 12.8 4 15 4c4 0 5.4 4.5 3.5 8-2.5 4.6-9.5 9-9.5 9z"/>',
+  book:'<path d="M4 5c3-1.5 6-1.5 8 0v14c-2-1.5-5-1.5-8 0Z"/><path d="M20 5c-3-1.5-6-1.5-8 0v14c2-1.5 5-1.5 8 0Z"/>',
+  users:'<circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.6.4 5 2 5 4.8"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>'
+};
+
+const FAQS = [
+  {q:'Musím mať prax v sklárskej výrobe?', a:'Nie. Väčšinu výrobných pozícií zaškolíme priamo na pracovisku. Prax je výhodou najmä pri technických pozíciách, ale nie je podmienkou.'},
+  {q:'Aké sú zmeny (turnusy)?', a:'Podľa pozície ponúkame jednozmennú, dvojzmennú alebo trojzmennú (nepretržitú) prevádzku. Konkrétny rozvrh upresníme pri pohovore.'},
+  {q:'Ako dlho trvá výberové konanie?', a:'Od prihlásenia záujmu po nástup to zvyčajne trvá 1 až 3 týždne, v závislosti od pozície a vašich časových možností.'},
+  {q:'Je potrebná vstupná zdravotná prehliadka?', a:'Áno, pri väčšine výrobných pozícií je vstupná lekárska prehliadka súčasťou náborového procesu. Termín a miesto vám zabezpečí HR oddelenie.'},
+  {q:'Ponúkate brigády alebo skrátený úväzok?', a:'Pri niektorých pozíciách (napr. upratovanie, sklad) je možný aj skrátený úväzok. Informujte sa priamo u HR tímu.'},
+  {q:'Od akého veku môžem nastúpiť?', a:'Štandardne prijímame uchádzačov od 18 rokov. Pri niektorých administratívnych pozíciách je možná aj spolupráca pre študentov.'},
+  {q:'Poskytujete zaučenie pre nové pozície?', a:'Áno, pri nástupe vás sprevádza skúsený kolega a máte k dispozícii štruktúrovaný zaškoľovací program.'},
+  {q:'Ako si dohodnem osobnú prehliadku prevádzky?', a:'Stačí zanechať kontakt v sekcii „Mám záujem“ alebo osloviť HR tím priamo — prehliadku radi zorganizujeme spolu s pohovorom.'}
+];
+
+const CONTACTS = [
+  {initials:'JN', name:'Jana Nováková', role:'HR manažérka', phone:'+421 42 111 22 33', email:'j.novakova@rona.sk'},
+  {initials:'MK', name:'Marek Krajčí', role:'Náborový špecialista — výroba', phone:'+421 42 111 22 34', email:'m.krajci@rona.sk'},
+  {initials:'ES', name:'Eva Slezáková', role:'HR administratíva', phone:'+421 42 111 22 35', email:'e.slezakova@rona.sk'}
+];
+
+/* ============ RENDER ============ */
+function svgIcon(paths){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;}
+
+function renderPositions(filter='all'){
+  const grid = document.getElementById('posGrid');
+  const list = filter==='all' ? POSITIONS : POSITIONS.filter(p=>p.cat===filter);
+  grid.innerHTML = list.map(p=>`
+    <div class="pos-card">
+      ${p.badge? `<span class="badge ${p.badge}">${p.badgeText}</span>`:''}
+      <div class="pos-icon">${svgIcon(ICONS[p.icon])}</div>
+      <h4>${p.name}</h4>
+      <p class="desc">${p.desc}</p>
+      <div class="pos-meta">
+        <span>${svgIcon('<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>')}${p.offer[0]}</span>
+        <span>${svgIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>')}${p.offer[1]}</span>
+      </div>
+      <div class="pos-actions">
+        <button class="btn btn-outline btn-sm" data-detail="${p.id}">Detail pozície</button>
+        <button class="btn btn-primary btn-sm" data-apply="${p.id}">Mám záujem</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderBenefits(){
+  document.getElementById('benefitGrid').innerHTML = BENEFITS.map(b=>`
+    <div class="benefit-card">
+      <div class="bi">${svgIcon(BICONS[b.icon])}</div>
+      <h4>${b.title}</h4>
+      <p>${b.text}</p>
+    </div>`).join('');
+}
+
+function renderFaq(){
+  document.getElementById('faqList').innerHTML = FAQS.map((f,i)=>`
+    <div class="faq-item" data-i="${i}">
+      <button class="faq-q">${f.q}${svgIcon('<path d="M5 12h14M12 5v14"/>')}</button>
+      <div class="faq-a"><p>${f.a}</p></div>
+    </div>`).join('');
+  document.querySelectorAll('.faq-q').forEach(btn=>{
+    btn.addEventListener('click',()=>btn.parentElement.classList.toggle('open'));
+  });
+}
+
+function renderContacts(){
+  document.getElementById('contactGrid').innerHTML = CONTACTS.map(c=>`
+    <div class="contact-card">
+      <div class="avatar">${c.initials}</div>
+      <h4>${c.name}</h4>
+      <div class="role">${c.role}</div>
+      <div class="line">${svgIcon('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6A2 2 0 0 1 22 16.9Z"/>')}${c.phone}</div>
+      <div class="line">${svgIcon('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>')}${c.email}</div>
+    </div>`).join('');
+}
+
+function renderPositionOptions(){
+  const sel = document.getElementById('fPozicia');
+  sel.innerHTML = '<option value="">Vyberte pozíciu</option>' + POSITIONS.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+/* ============ NAV ============ */
+function switchView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.view===name));
+  const titles = {home:['HR Centrum','Vitajte v RONA'],positions:['Kariéra','Voľné pozície'],apply:['Kariéra','Mám záujem o prácu'],
+    process:['Kariéra','Priebeh náborového procesu'],benefits:['Zamestnanecké výhody','Benefity v RONA'],
+    about:['O firme','O spoločnosti RONA'],faq:['Kariéra','Časté otázky'],contact:['Kariéra','Kontakt na HR oddelenie']};
+  document.getElementById('crumb').textContent = titles[name][0];
+  document.getElementById('pageTitle').textContent = titles[name][1];
+  document.getElementById('view-'+name).scrollTop = 0;
+  if(name==='apply'){
+    document.getElementById('formWrap').style.display='grid';
+    document.getElementById('confirmScreen').classList.remove('active');
+  }
+}
+document.body.addEventListener('click', e=>{
+  const navBtn = e.target.closest('[data-view]');
+  if(navBtn){ switchView(navBtn.dataset.view); }
+});
+
+/* filter chips */
+document.getElementById('filterRow').addEventListener('click', e=>{
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  renderPositions(chip.dataset.filter);
+});
+
+/* position detail modal + apply shortcuts */
+document.getElementById('posGrid').addEventListener('click', e=>{
+  const detailBtn = e.target.closest('[data-detail]');
+  const applyBtn = e.target.closest('[data-apply]');
+  if(detailBtn){
+    const p = POSITIONS.find(x=>x.id===detailBtn.dataset.detail);
+    document.getElementById('modalBody').innerHTML = `
+      <div class="modal-sub">${p.cat==='vyroba'?'Výrobná pozícia':p.cat==='technicke'?'Technická pozícia':'Ostatné pozície'}</div>
+      <h3>${p.name}</h3>
+      <div class="modal-block"><p>${p.desc}</p></div>
+      <div class="modal-block"><h5>Čo očakávame</h5><ul>${p.req.map(r=>`<li>${r}</li>`).join('')}</ul></div>
+      <div class="modal-block"><h5>Čo ponúkame</h5><ul>${p.offer.map(o=>`<li>${o}</li>`).join('')}</ul></div>
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" data-apply-modal="${p.id}">Mám záujem o túto pozíciu</button>
+    `;
+    document.getElementById('modalOverlay').classList.add('active');
+  }
+  if(applyBtn){ goToApply(applyBtn.dataset.apply); }
+});
+document.getElementById('modalBody').addEventListener('click', e=>{
+  const b = e.target.closest('[data-apply-modal]');
+  if(b){ document.getElementById('modalOverlay').classList.remove('active'); goToApply(b.dataset.applyModal); }
+});
+document.getElementById('modalClose').addEventListener('click', ()=>document.getElementById('modalOverlay').classList.remove('active'));
+document.getElementById('modalOverlay').addEventListener('click', e=>{ if(e.target.id==='modalOverlay') e.currentTarget.classList.remove('active'); });
+
+function goToApply(posId){
+  switchView('apply');
+  document.getElementById('fPozicia').value = posId;
+}
+
+/* form submit */
+document.getElementById('applyForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const code = 'RONA-' + Math.floor(100000+Math.random()*900000);
+  document.getElementById('refCode').textContent = code;
+  try{
+    const entry = {
+      meno:document.getElementById('fMeno').value, priezvisko:document.getElementById('fPriezvisko').value,
+      telefon:document.getElementById('fTelefon').value, email:document.getElementById('fEmail').value,
+      pozicia:document.getElementById('fPozicia').value, zmena:document.getElementById('fZmena').value,
+      poznamka:document.getElementById('fPoznamka').value, code:code, cas:new Date().toISOString()
+    };
+    const store = JSON.parse(localStorage.getItem('rona_zaujmy')||'[]');
+    store.push(entry); localStorage.setItem('rona_zaujmy', JSON.stringify(store));
+  }catch(err){}
+  document.getElementById('formWrap').style.display='none';
+  document.getElementById('confirmScreen').classList.add('active');
+  e.target.reset();
+});
+document.getElementById('backHomeBtn').addEventListener('click', ()=>switchView('home'));
+
+/* accessibility font scale */
+let scale = 1;
+function applyScale(){ document.documentElement.style.setProperty('--scale', scale); }
+document.getElementById('fontUp').addEventListener('click', ()=>{ scale = Math.min(1.25, scale+0.08); applyScale(); });
+document.getElementById('fontDown').addEventListener('click', ()=>{ scale = Math.max(0.9, scale-0.08); applyScale(); });
+
+/* clock */
+function tickClock(){
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('sk-SK',{hour:'2-digit',minute:'2-digit'});
+  const ds = now.toLocaleDateString('sk-SK',{weekday:'long', day:'numeric', month:'long'});
+  document.getElementById('dateStr').textContent = ds;
+}
+tickClock(); setInterval(tickClock, 15000);
+
+/* idle screensaver */
+let idleTimer;
+const IDLE_MS = 90000;
+function resetIdle(){
+  clearTimeout(idleTimer);
+  document.getElementById('screensaver').classList.remove('active');
+  idleTimer = setTimeout(()=>{
+    document.getElementById('screensaver').classList.add('active');
+  }, IDLE_MS);
+}
+['click','touchstart','mousemove','keydown'].forEach(evt=>document.addEventListener(evt, resetIdle));
+document.getElementById('screensaver').addEventListener('click', ()=>{ switchView('home'); resetIdle(); });
+resetIdle();
+
+/* init */
+renderPositions();
+renderBenefits();
+renderFaq();
+renderContacts();
+renderPositionOptions();
+</script>
+</body>
+</html>
