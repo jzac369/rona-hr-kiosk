@@ -1259,6 +1259,7 @@ onAuthStateChanged(auth, user=>{
     seedContentIfEmpty('content_benefits', BENEFITS);
     seedContentIfEmpty('content_faq', FAQS);
     seedContentIfEmpty('content_contacts', CONTACTS);
+    seedOnboardingIfEmpty();
   } else {
     $('adminLinkIcon').textContent = '🔒';
     $('adminLinkLabel').textContent = t('admin.login');
@@ -1443,16 +1444,41 @@ $('editModalClose').addEventListener('click', ()=>$('editModalOverlay').classLis
 $('editModalOverlay').addEventListener('click', e=>{ if(e.target.id==='editModalOverlay') e.currentTarget.classList.remove('active'); });
 
 /* ---------- SEED EXAMPLE DATA ---------- */
+async function seedOnboardingIfEmpty(){
+  try{
+    const snap = await getDocs(collection(db,'onboarding_rooms'));
+    if(snap.empty) await seedExampleData();
+  }catch(e){ /* must never break the app */ }
+}
 async function seedExampleData(){
-  const r1 = await addDoc(collection(db,'onboarding_rooms'), {name:'MUDr. Jančová', role:'Vstupná zdravotná prehliadka', door:'12', x:25, y:30});
-  const r2 = await addDoc(collection(db,'onboarding_rooms'), {name:'HR oddelenie', role:'Podpis zmluvy, potvrdenia', door:'5', x:60, y:25});
-  const r3 = await addDoc(collection(db,'onboarding_rooms'), {name:'Účtovníčka', role:'Nahlásenie na mzdy', door:'8', x:45, y:65});
-  const r4 = await addDoc(collection(db,'onboarding_rooms'), {name:'Vrátnica', role:'Prístupová karta, kľúče', door:'1', x:78, y:75});
-  await addDoc(collection(db,'onboarding_steps'), {order:1, title:'Vstupná lekárska prehliadka', description:'Navštívte MUDr. Jančovú a absolvujte vstupnú zdravotnú prehliadku.', formName:'Tlačivo o zdravotnej spôsobilosti', whereConfirm:'potvrdí lekárka priamo na mieste', roomId:r1.id});
-  await addDoc(collection(db,'onboarding_steps'), {order:2, title:'Podpis pracovnej zmluvy', description:'Choďte na HR oddelenie podpísať zmluvu a odovzdať potvrdené tlačivo od lekárky.', formName:'Pracovná zmluva', whereConfirm:'HR oddelenie, dvere č. 5', roomId:r2.id});
-  await addDoc(collection(db,'onboarding_steps'), {order:3, title:'Nahlásenie na mzdovú agendu', description:'Zastavte sa u účtovníčky a nechajte si potvrdiť tlačivo pre mzdové oddelenie.', formName:'Mzdový dotazník', whereConfirm:'účtovníčka, dvere č. 8', roomId:r3.id});
-  await addDoc(collection(db,'onboarding_steps'), {order:4, title:'Prevzatie prístupovej karty', description:'Na vrátnici si vyzdvihnite prístupovú kartu a kľúče od šatne.', formName:'', whereConfirm:'vrátnica, dvere č. 1', roomId:r4.id});
-  await logActivity('seed','Postup pri nástupe','Načítané príkladové dáta (miestnosti a kroky)');
+  const r1 = await addDoc(collection(db,'onboarding_rooms'), {name:'Vrátnica', role:'Bezpečnostná služba', door:'1', x:15, y:85});
+  const r2 = await addDoc(collection(db,'onboarding_rooms'), {name:'HR oddelenie', role:'Personalistka', door:'5', x:50, y:20});
+  const r3 = await addDoc(collection(db,'onboarding_rooms'), {name:'Mzdová účtáreň', role:'Účtovníčka', door:'8', x:78, y:32});
+  const r4 = await addDoc(collection(db,'onboarding_rooms'), {name:'IT oddelenie', role:'Správca IT', door:'10', x:88, y:55});
+  const r5 = await addDoc(collection(db,'onboarding_rooms'), {name:'Sklad OOPP', role:'Výdaj pracovného odevu', door:'3', x:18, y:45});
+  const r6 = await addDoc(collection(db,'onboarding_rooms'), {name:'MUDr. Jančová', role:'Vstupná zdravotná prehliadka', door:'12', x:30, y:12});
+  const r7 = await addDoc(collection(db,'onboarding_rooms'), {name:'Referent BOZP', role:'Školenie BOZP a PO', door:'15', x:62, y:8});
+  const r8 = await addDoc(collection(db,'onboarding_rooms'), {name:'Jedáleň', role:'Vedúca stravovania', door:'6', x:45, y:72});
+  const r9 = await addDoc(collection(db,'onboarding_rooms'), {name:'Majster zmeny', role:'Vedúci výroby', door:'20', x:82, y:82});
+  const r10 = await addDoc(collection(db,'onboarding_rooms'), {name:'Mentor na pracovisku', role:'Skúsený kolega', door:'22', x:65, y:88});
+  const r11 = await addDoc(collection(db,'onboarding_rooms'), {name:'Odborový zväz', role:'Sociálny fond', door:'18', x:10, y:60});
+
+  const steps = [
+    {order:1, title:'Príchod a registrácia na vrátnici', description:'Nahláste sa na vrátnici, overíme totožnosť a vydáme vám dočasnú identifikačnú kartu.', formName:'', whereConfirm:'vrátnica, dvere č. 1', roomId:r1.id},
+    {order:2, title:'Podpis pracovnej zmluvy', description:'Choďte na HR oddelenie prevziať a podpísať pracovnú zmluvu a súvisiace dokumenty.', formName:'Pracovná zmluva a nástupné dokumenty', whereConfirm:'HR oddelenie, dvere č. 5', roomId:r2.id},
+    {order:3, title:'Nahlásenie na mzdovú agendu', description:'Zastavte sa u účtovníčky, nahláste bankový účet a vyplňte mzdový dotazník.', formName:'Mzdový dotazník', whereConfirm:'mzdová účtáreň, dvere č. 8', roomId:r3.id},
+    {order:4, title:'Prevzatie prístupovej karty a IT vybavenia', description:'Na IT oddelení dostanete prístupovú kartu, firemný e-mail a prípadné IT vybavenie.', formName:'Preberací protokol IT', whereConfirm:'IT oddelenie, dvere č. 10', roomId:r4.id},
+    {order:5, title:'Vyzdvihnutie pracovného odevu', description:'V sklade OOPP si vyzdvihnite pracovný odev, obuv a ochranné pomôcky podľa vašej pozície.', formName:'Potvrdenie o prevzatí OOPP', whereConfirm:'sklad OOPP, dvere č. 3', roomId:r5.id},
+    {order:6, title:'Vstupná zdravotná prehliadka', description:'Navštívte MUDr. Jančovú a absolvujte vstupnú zdravotnú prehliadku potvrdzujúcu spôsobilosť na danú pozíciu.', formName:'Tlačivo o zdravotnej spôsobilosti', whereConfirm:'potvrdí lekárka priamo na mieste', roomId:r6.id},
+    {order:7, title:'Školenie BOZP a požiarnej ochrany', description:'Absolvujte povinné vstupné školenie bezpečnosti práce a požiarnej ochrany.', formName:'Záznam o školení BOZP a PO', whereConfirm:'referent BOZP, dvere č. 15', roomId:r7.id},
+    {order:8, title:'Vydanie stravovacej karty', description:'V jedálni si vyzdvihnite stravovaciu kartu a dozviete sa viac o stravovacom systéme.', formName:'', whereConfirm:'jedáleň, dvere č. 6', roomId:r8.id},
+    {order:9, title:'Predstavenie na pracovisku', description:'Majster zmeny vás predstaví tímu a ukáže vaše konkrétne pracovisko a stroje.', formName:'', whereConfirm:'majster zmeny, dvere č. 20', roomId:r9.id},
+    {order:10, title:'Praktické zaškolenie na pozícii', description:'Skúsený kolega vás prevedie praktickým zaškolením priamo na vašej pracovnej pozícii.', formName:'Záznam o zaškolení', whereConfirm:'mentor, dvere č. 22', roomId:r10.id},
+    {order:11, title:'Informácie o odboroch a sociálnom fonde', description:'Dobrovoľné stretnutie s odborovým zástupcom o členstve a čerpaní zo sociálneho fondu.', formName:'', whereConfirm:'odborový zväz, dvere č. 18', roomId:r11.id},
+    {order:12, title:'Kontrolný pohovor po prvom týždni', description:'Krátke stretnutie s HR oddelením — zhodnotenie prvého týždňa a zodpovedanie otázok.', formName:'', whereConfirm:'HR oddelenie, dvere č. 5', roomId:r2.id}
+  ];
+  for(const s of steps){ await addDoc(collection(db,'onboarding_steps'), s); }
+  await logActivity('seed','Postup pri nástupe','Načítaný kompletný 12-krokový postup nástupu (miestnosti a kroky)');
 }
 
 /* ================= ACTIVITY LOG ================= */
