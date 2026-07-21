@@ -298,7 +298,81 @@ button{font-family:inherit; cursor:pointer;}
 /* footer */
 .footer-note{margin-top:40px; padding-top:18px; border-top:1px solid var(--cream-200); font-size:0.72rem; color:var(--ink-300); text-align:center;}
 
+/* ============ PRIORITY BANNER (home) ============ */
+.priority-banner{
+  display:flex; align-items:center; gap:24px; margin-top:26px;
+  background:linear-gradient(120deg, var(--gold-100), var(--cream-100));
+  border:2px solid var(--gold-500); border-radius:var(--radius-lg);
+  padding:26px 30px; cursor:pointer; transition:transform .15s ease, box-shadow .2s ease;
+}
+.priority-banner:hover{transform:translateY(-2px); box-shadow:0 14px 30px rgba(198,153,47,0.25);}
+.priority-icon{flex:0 0 auto; width:64px; height:64px; border-radius:16px; background:var(--maroon-600); display:flex; align-items:center; justify-content:center;}
+.priority-icon svg{width:32px; height:32px; color:#fff;}
+.priority-copy{flex:1;}
+.priority-eyebrow{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:800; color:var(--maroon-700); margin-bottom:4px;}
+.priority-copy h3{font-family:var(--font-display); font-size:1.4rem; margin:0 0 6px; font-weight:800; color:var(--ink-900);}
+.priority-copy p{margin:0; font-size:0.88rem; color:var(--ink-700); line-height:1.5; max-width:520px;}
+.priority-banner .btn{flex:0 0 auto;}
+
+/* ============ ADMIN SIDEBAR CONTROLS ============ */
+.admin-link{width:100%; margin-top:14px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.85); border-radius:10px; padding:9px 10px; font-size:0.72rem; font-weight:700;}
+.admin-link:hover{background:rgba(255,255,255,0.16);}
+.admin-status{margin-top:10px; font-size:0.68rem; color:var(--gold-100); line-height:1.5; word-break:break-word;}
+.admin-status button{margin-top:6px; width:100%; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25); color:#fff; border-radius:8px; padding:6px; font-size:0.68rem; font-weight:700;}
+
+/* ============ ONBOARDING VIEW ============ */
+.onb-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;}
+.onb-head .sub{font-size:0.85rem; color:var(--ink-500); margin-top:4px;}
+.edit-toggle{display:flex; align-items:center; gap:10px;}
+.badge-admin{background:var(--maroon-600); color:#fff; font-size:0.68rem; font-weight:800; padding:5px 10px; border-radius:999px; text-transform:uppercase; letter-spacing:0.04em;}
+
+.onb-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:24px; align-items:start;}
+.floorplan-wrap{background:#fff; border:1.5px solid var(--cream-200); border-radius:var(--radius-lg); padding:22px; box-shadow:var(--shadow-card);}
+.floorplan-wrap h4{margin:0 0 4px; font-family:var(--font-display); font-size:1.1rem; font-weight:800;}
+.floorplan-wrap .fp-hint{font-size:0.76rem; color:var(--ink-500); margin-bottom:14px;}
+.floorplan{
+  position:relative; width:100%; aspect-ratio:4/3; border-radius:14px;
+  background-color:var(--cream-050);
+  background-image:linear-gradient(rgba(163,38,56,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(163,38,56,0.06) 1px, transparent 1px);
+  background-size:24px 24px;
+  border:3px solid var(--ink-900); overflow:hidden;
+}
+.fp-room{
+  position:absolute; min-width:80px; padding:8px 10px; background:#fff; border:2px solid var(--maroon-600);
+  border-radius:10px; font-size:0.7rem; font-weight:700; color:var(--ink-900); text-align:center;
+  transform:translate(-50%,-50%); box-shadow:0 3px 10px rgba(0,0,0,0.12); transition:box-shadow .2s ease, border-color .2s ease;
+  cursor:pointer; line-height:1.35;
+}
+.fp-room .door{display:block; font-weight:600; color:var(--maroon-600); font-size:0.64rem; margin-top:2px;}
+.fp-room.editable{cursor:grab;}
+.fp-room.editable:active{cursor:grabbing;}
+.fp-room.highlight{border-color:var(--gold-500); box-shadow:0 0 0 6px rgba(198,153,47,0.3); z-index:5; animation:roomPulse 1.4s ease 2;}
+@keyframes roomPulse{0%,100%{box-shadow:0 0 0 6px rgba(198,153,47,0.3);} 50%{box-shadow:0 0 0 12px rgba(198,153,47,0.12);}}
+.fp-room .room-del{position:absolute; top:-9px; right:-9px; width:20px; height:20px; border-radius:50%; background:#B23434; color:#fff; font-size:0.7rem; display:flex; align-items:center; justify-content:center; border:2px solid #fff;}
+.fp-empty{display:flex; align-items:center; justify-content:center; height:100%; color:var(--ink-300); font-size:0.85rem; text-align:center; padding:20px;}
+.fp-add-room{margin-top:14px; width:100%;}
+
+.steps-wrap{background:#fff; border:1.5px solid var(--cream-200); border-radius:var(--radius-lg); padding:22px; box-shadow:var(--shadow-card);}
+.steps-wrap h4{margin:0 0 14px; font-family:var(--font-display); font-size:1.1rem; font-weight:800;}
+.onb-step{display:flex; gap:14px; padding:14px 12px; border-radius:12px; border:1.5px solid var(--cream-200); margin-bottom:10px; cursor:pointer; transition:background .15s ease, border-color .15s ease; position:relative;}
+.onb-step:hover{background:var(--cream-050); border-color:var(--gold-500);}
+.onb-step .num{flex:0 0 30px; height:30px; border-radius:50%; background:var(--maroon-600); color:#fff; font-weight:800; font-size:0.85rem; display:flex; align-items:center; justify-content:center;}
+.onb-step .body{flex:1;}
+.onb-step h5{margin:0 0 4px; font-size:0.92rem; font-weight:800;}
+.onb-step p{margin:0 0 6px; font-size:0.8rem; color:var(--ink-500); line-height:1.45;}
+.onb-step .meta-line{font-size:0.74rem; color:var(--maroon-600); font-weight:700;}
+.onb-step .step-edit-actions{display:flex; gap:6px; position:absolute; top:12px; right:12px;}
+.onb-step .step-edit-actions button{width:26px; height:26px; border-radius:8px; border:none; background:var(--cream-100); font-size:0.75rem;}
+.onb-add-step{width:100%; margin-top:6px;}
+.onb-empty-msg{color:var(--ink-500); font-size:0.85rem; text-align:center; padding:20px; background:var(--cream-050); border-radius:12px;}
+
+/* Admin login modal reuses .modal but with its own body */
+.login-form .field{margin-bottom:14px;}
+.login-error{color:#B23434; font-size:0.8rem; margin-top:6px; display:none;}
+.seed-box{background:var(--cream-100); border-radius:12px; padding:16px; margin-top:16px; font-size:0.82rem; color:var(--ink-700); text-align:center;}
+
 @media (max-width:1180px){
+  .onb-grid{grid-template-columns:1fr;}
   .quick-grid{grid-template-columns:repeat(2,1fr);}
   .pos-grid{grid-template-columns:1fr;}
   .benefit-grid{grid-template-columns:repeat(2,1fr);}
@@ -320,6 +394,9 @@ button{font-family:inherit; cursor:pointer;}
       <li><button class="nav-item active" data-view="home">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
         Domov</button></li>
+      <li><button class="nav-item" data-view="onboarding">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 20H4V4h11v5"/><path d="M14 4l6 6"/><path d="M14 4v6h6"/><circle cx="16.5" cy="16.5" r="4"/><path d="m19.5 19.5 2.5 2.5"/></svg>
+        Postup pri nástupe</button></li>
       <li><button class="nav-item" data-view="positions">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
         Voľné pozície</button></li>
@@ -345,6 +422,8 @@ button{font-family:inherit; cursor:pointer;}
     <div class="sidebar-foot">
       <div class="clock" id="clock">--:--</div>
       <div class="date" id="dateStr">—</div>
+      <button class="admin-link" id="adminLinkBtn">🔒 Admin prihlásenie</button>
+      <div class="admin-status" id="adminStatus" style="display:none;"></div>
     </div>
   </nav>
 
@@ -380,6 +459,20 @@ button{font-family:inherit; cursor:pointer;}
             <div class="stat"><b>5</b><span>krokov do nástupu</span></div>
           </div>
         </div>
+      </div>
+
+      <div class="priority-banner" data-view="onboarding">
+        <div class="priority-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 20H4V4h11v5"/><path d="M14 4l6 6"/><path d="M14 4v6h6"/><circle cx="16.5" cy="16.5" r="4"/><path d="m19.5 19.5 2.5 2.5"/></svg>
+        </div>
+        <div class="priority-copy">
+          <div class="priority-eyebrow">Práve ste nastúpili?</div>
+          <h3>Postup pri nástupe do zamestnania</h3>
+          <p>Plán budovy, kde koho nájdete a presný postup — aké tlačivo si vziať a kde ho nechať potvrdiť.</p>
+        </div>
+        <button class="btn btn-primary">Zobraziť postup
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
       </div>
 
       <div class="section-head"><h3>Rýchle skratky</h3></div>
@@ -550,6 +643,33 @@ button{font-family:inherit; cursor:pointer;}
       </div>
     </section>
 
+    <!-- ONBOARDING -->
+    <section class="view" id="view-onboarding">
+      <div class="onb-head">
+        <div>
+          <div class="sub">Plán budovy, kontakty a presné kroky, ktoré vás čakajú po nástupe.</div>
+        </div>
+        <div class="edit-toggle" id="editToggleWrap" style="display:none;">
+          <span class="badge-admin">Admin režim</span>
+          <button class="btn btn-outline btn-sm" id="editModeBtn">Upraviť obsah</button>
+        </div>
+      </div>
+      <div class="onb-grid">
+        <div class="floorplan-wrap">
+          <h4>Plán budovy</h4>
+          <div class="fp-hint" id="fpHint">Kliknite na krok vpravo — miestnosť sa zvýrazní na pláne.</div>
+          <div class="floorplan" id="floorplan"><div class="fp-empty" id="fpEmpty">Plán sa načítava…</div></div>
+          <button class="btn btn-outline btn-sm fp-add-room" id="addRoomBtn" style="display:none;">+ Pridať miestnosť</button>
+        </div>
+        <div class="steps-wrap">
+          <h4>Postup krokov</h4>
+          <div id="stepsList"></div>
+          <button class="btn btn-outline btn-sm onb-add-step" id="addStepBtn" style="display:none;">+ Pridať krok</button>
+        </div>
+      </div>
+      <div class="footer-note">Poznámka: plán budovy je zatiaľ orientačný a bude nahradený reálnym pôdorysom.</div>
+    </section>
+
     <!-- FAQ -->
     <section class="view" id="view-faq">
       <div class="section-head"><h3>Časté otázky uchádzačov</h3></div>
@@ -585,6 +705,29 @@ button{font-family:inherit; cursor:pointer;}
   <div class="modal">
     <button class="modal-close" id="modalClose">✕</button>
     <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="adminModalOverlay">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" id="adminModalClose">✕</button>
+    <h3>Prihlásenie do admin zóny</h3>
+    <div class="modal-sub">Iba pre HR tím</div>
+    <form class="login-form" id="adminLoginForm">
+      <div class="field"><label>E-mail</label><input type="email" id="adminEmail" required autocomplete="username"></div>
+      <div class="field"><label>Heslo</label><input type="password" id="adminPassword" required autocomplete="current-password"></div>
+      <div class="login-error" id="adminLoginError">Nesprávny e-mail alebo heslo.</div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:8px;">Prihlásiť sa</button>
+    </form>
+  </div>
+</div>
+
+<!-- ROOM / STEP EDIT MODAL -->
+<div class="modal-overlay" id="editModalOverlay">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" id="editModalClose">✕</button>
+    <div id="editModalBody"></div>
   </div>
 </div>
 
@@ -756,7 +899,7 @@ function switchView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.view===name));
-  const titles = {home:['HR Centrum','Vitajte v RONA'],positions:['Kariéra','Voľné pozície'],apply:['Kariéra','Mám záujem o prácu'],
+  const titles = {home:['HR Centrum','Vitajte v RONA'],onboarding:['Postup pri nástupe','Postup pri nástupe do zamestnania'],positions:['Kariéra','Voľné pozície'],apply:['Kariéra','Mám záujem o prácu'],
     process:['Kariéra','Priebeh náborového procesu'],benefits:['Zamestnanecké výhody','Benefity v RONA'],
     about:['O firme','O spoločnosti RONA'],faq:['Kariéra','Časté otázky'],contact:['Kariéra','Kontakt na HR oddelenie']};
   document.getElementById('crumb').textContent = titles[name][0];
@@ -867,6 +1010,251 @@ renderBenefits();
 renderFaq();
 renderContacts();
 renderPositionOptions();
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD2hwcnzcZ1BozqQ9qMgF5b1e3Fkf9YtCI",
+  authDomain: "rona-hr-kiosk.firebaseapp.com",
+  projectId: "rona-hr-kiosk",
+  storageBucket: "rona-hr-kiosk.firebasestorage.app",
+  messagingSenderId: "560266287795",
+  appId: "1:560266287795:web:c3ca77d87ffcb64827eec6"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let isAdmin = false;
+let editMode = false;
+let rooms = [];
+let steps = [];
+let dragTarget = null;
+
+const $ = id => document.getElementById(id);
+
+/* ---------- AUTH ---------- */
+$('adminLinkBtn').addEventListener('click', ()=>{
+  if(isAdmin){ signOut(auth); return; }
+  $('adminModalOverlay').classList.add('active');
+});
+$('adminModalClose').addEventListener('click', ()=>$('adminModalOverlay').classList.remove('active'));
+$('adminModalOverlay').addEventListener('click', e=>{ if(e.target.id==='adminModalOverlay') e.currentTarget.classList.remove('active'); });
+
+$('adminLoginForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  $('adminLoginError').style.display='none';
+  try{
+    await signInWithEmailAndPassword(auth, $('adminEmail').value, $('adminPassword').value);
+    $('adminModalOverlay').classList.remove('active');
+    $('adminLoginForm').reset();
+  }catch(err){
+    $('adminLoginError').style.display='block';
+  }
+});
+
+onAuthStateChanged(auth, user=>{
+  isAdmin = !!user;
+  if(isAdmin){
+    $('adminLinkBtn').textContent = '🔓 Odhlásiť admina';
+    $('adminStatus').style.display='block';
+    $('adminStatus').innerHTML = 'Prihlásený: ' + user.email;
+    $('editToggleWrap').style.display='flex';
+  } else {
+    $('adminLinkBtn').textContent = '🔒 Admin prihlásenie';
+    $('adminStatus').style.display='none';
+    $('editToggleWrap').style.display='none';
+    editMode = false;
+    $('editModeBtn').textContent = 'Upraviť obsah';
+  }
+  renderFloorplan();
+  renderSteps();
+});
+
+$('editModeBtn').addEventListener('click', ()=>{
+  editMode = !editMode;
+  $('editModeBtn').textContent = editMode ? 'Skončiť úpravu' : 'Upraviť obsah';
+  $('fpHint').textContent = editMode ? 'Miestnosti presuniete ťahaním. Kliknutím na ✕ ich odstránite.' : 'Kliknite na krok vpravo — miestnosť sa zvýrazní na pláne.';
+  $('addRoomBtn').style.display = editMode ? 'block':'none';
+  $('addStepBtn').style.display = editMode ? 'block':'none';
+  renderFloorplan();
+  renderSteps();
+});
+
+/* ---------- FIRESTORE LISTENERS ---------- */
+onSnapshot(collection(db,'onboarding_rooms'), snap=>{
+  rooms = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  renderFloorplan();
+});
+onSnapshot(collection(db,'onboarding_steps'), snap=>{
+  steps = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
+  renderSteps();
+});
+
+/* ---------- RENDER FLOORPLAN ---------- */
+function renderFloorplan(){
+  const fp = $('floorplan');
+  if(rooms.length===0){
+    fp.innerHTML = `<div class="fp-empty">${isAdmin ? 'Plán je zatiaľ prázdny. Pridajte prvú miestnosť tlačidlom nižšie, alebo načítajte príkladové dáta.' : 'Plán budovy zatiaľ nie je nastavený.'}</div>`;
+    if(isAdmin && rooms.length===0 && !fp.querySelector('.seed-inline')){
+      const seed = document.createElement('div');
+      seed.className='seed-inline';
+      seed.style.cssText='position:absolute; bottom:14px; left:50%; transform:translateX(-50%);';
+      seed.innerHTML = `<button class="btn btn-primary btn-sm" id="seedBtn">Načítať príkladové dáta</button>`;
+      fp.appendChild(seed);
+      document.getElementById('seedBtn').addEventListener('click', seedExampleData);
+    }
+    return;
+  }
+  fp.innerHTML = rooms.map(r=>`
+    <div class="fp-room ${editMode?'editable':''}" data-room-id="${r.id}" style="left:${r.x||50}%; top:${r.y||50}%;">
+      ${r.name||'Miestnosť'}<span class="door">${r.role?r.role+' · ':''}dvere ${r.door||'?'}</span>
+      ${editMode?`<div class="room-del" data-del-room="${r.id}">✕</div>`:''}
+    </div>`).join('');
+  if(editMode){
+    fp.querySelectorAll('.fp-room').forEach(el=>{
+      el.addEventListener('pointerdown', startDrag);
+      el.addEventListener('click', e=>{
+        if(e.target.closest('.room-del')) return;
+        openRoomEditor(el.dataset.roomId);
+      });
+    });
+    fp.querySelectorAll('[data-del-room]').forEach(btn=>{
+      btn.addEventListener('click', async e=>{
+        e.stopPropagation();
+        if(confirm('Odstrániť túto miestnosť?')) await deleteDoc(doc(db,'onboarding_rooms',btn.dataset.delRoom));
+      });
+    });
+  }
+}
+
+function startDrag(e){
+  dragTarget = e.currentTarget;
+  const fp = $('floorplan');
+  const rect = fp.getBoundingClientRect();
+  function move(ev){
+    const x = Math.min(96, Math.max(4, ((ev.clientX-rect.left)/rect.width)*100));
+    const y = Math.min(94, Math.max(6, ((ev.clientY-rect.top)/rect.height)*100));
+    dragTarget.style.left = x+'%';
+    dragTarget.style.top = y+'%';
+  }
+  function up(ev){
+    document.removeEventListener('pointermove', move);
+    document.removeEventListener('pointerup', up);
+    const x = parseFloat(dragTarget.style.left);
+    const y = parseFloat(dragTarget.style.top);
+    updateDoc(doc(db,'onboarding_rooms',dragTarget.dataset.roomId), {x, y});
+    dragTarget=null;
+  }
+  document.addEventListener('pointermove', move);
+  document.addEventListener('pointerup', up);
+}
+
+/* ---------- RENDER STEPS ---------- */
+function renderSteps(){
+  const list = $('stepsList');
+  if(steps.length===0){
+    list.innerHTML = `<div class="onb-empty-msg">${isAdmin? 'Zatiaľ nie sú pridané žiadne kroky postupu.' : 'Postup pri nástupe zatiaľ nie je nastavený.'}</div>`;
+    return;
+  }
+  list.innerHTML = steps.map((s,i)=>`
+    <div class="onb-step" data-step-id="${s.id}" data-room-id="${s.roomId||''}">
+      <div class="num">${i+1}</div>
+      <div class="body">
+        <h5>${s.title||''}</h5>
+        <p>${s.description||''}</p>
+        ${s.formName?`<div class="meta-line">📄 ${s.formName}${s.whereConfirm? ' · potvrdiť: '+s.whereConfirm:''}</div>`:''}
+      </div>
+      ${editMode?`<div class="step-edit-actions"><button data-edit-step="${s.id}">✎</button><button data-del-step="${s.id}">✕</button></div>`:''}
+    </div>`).join('');
+
+  list.querySelectorAll('.onb-step').forEach(el=>{
+    el.addEventListener('click', e=>{
+      if(e.target.closest('.step-edit-actions')) return;
+      const roomId = el.dataset.roomId;
+      if(!roomId) return;
+      switchView('onboarding');
+      const roomEl = document.querySelector(`.fp-room[data-room-id="${roomId}"]`);
+      if(roomEl){
+        roomEl.classList.add('highlight');
+        roomEl.scrollIntoView({behavior:'smooth', block:'center'});
+        setTimeout(()=>roomEl.classList.remove('highlight'), 3000);
+      }
+    });
+  });
+  if(editMode){
+    list.querySelectorAll('[data-edit-step]').forEach(btn=>btn.addEventListener('click', e=>{e.stopPropagation(); openStepEditor(btn.dataset.editStep);}));
+    list.querySelectorAll('[data-del-step]').forEach(btn=>btn.addEventListener('click', async e=>{
+      e.stopPropagation();
+      if(confirm('Odstrániť tento krok?')) await deleteDoc(doc(db,'onboarding_steps',btn.dataset.delStep));
+    }));
+  }
+}
+
+/* ---------- ADD BUTTONS ---------- */
+$('addRoomBtn').addEventListener('click', ()=>openRoomEditor(null));
+$('addStepBtn').addEventListener('click', ()=>openStepEditor(null));
+
+/* ---------- EDIT MODALS ---------- */
+function openRoomEditor(roomId){
+  const r = roomId ? rooms.find(x=>x.id===roomId) : {name:'',role:'',door:'',notes:'',x:50,y:50};
+  $('editModalBody').innerHTML = `
+    <h3>${roomId?'Upraviť miestnosť':'Nová miestnosť'}</h3>
+    <div class="field"><label>Meno / názov (napr. doktorka Jančová)</label><input id="rmName" value="${r.name||''}"></div>
+    <div class="field"><label>Rola (napr. Ambulancia, HR manažérka...)</label><input id="rmRole" value="${r.role||''}"></div>
+    <div class="field"><label>Číslo dverí</label><input id="rmDoor" value="${r.door||''}"></div>
+    <div class="field"><label>Poznámka (nepovinné)</label><textarea id="rmNotes">${r.notes||''}</textarea></div>
+    <button class="btn btn-primary" id="rmSave" style="width:100%; justify-content:center;">Uložiť miestnosť</button>`;
+  $('editModalOverlay').classList.add('active');
+  $('rmSave').addEventListener('click', async ()=>{
+    const data = {name:$('rmName').value, role:$('rmRole').value, door:$('rmDoor').value, notes:$('rmNotes').value};
+    if(roomId){ await updateDoc(doc(db,'onboarding_rooms',roomId), data); }
+    else { await addDoc(collection(db,'onboarding_rooms'), {...data, x:r.x, y:r.y}); }
+    $('editModalOverlay').classList.remove('active');
+  });
+}
+
+function openStepEditor(stepId){
+  const s = stepId ? steps.find(x=>x.id===stepId) : {title:'',description:'',formName:'',whereConfirm:'',roomId:'',order:steps.length+1};
+  const roomOptions = rooms.map(r=>`<option value="${r.id}" ${s.roomId===r.id?'selected':''}>${r.name}</option>`).join('');
+  $('editModalBody').innerHTML = `
+    <h3>${stepId?'Upraviť krok':'Nový krok'}</h3>
+    <div class="field"><label>Názov kroku</label><input id="stTitle" value="${s.title||''}"></div>
+    <div class="field"><label>Popis</label><textarea id="stDesc">${s.description||''}</textarea></div>
+    <div class="field"><label>Potrebné tlačivo (nepovinné)</label><input id="stForm" value="${s.formName||''}"></div>
+    <div class="field"><label>Kde potvrdiť (nepovinné)</label><input id="stConfirm" value="${s.whereConfirm||''}"></div>
+    <div class="field"><label>Súvisiaca miestnosť</label><select id="stRoom"><option value="">— žiadna —</option>${roomOptions}</select></div>
+    <div class="field"><label>Poradie (číslo)</label><input type="number" id="stOrder" value="${s.order||1}"></div>
+    <button class="btn btn-primary" id="stSave" style="width:100%; justify-content:center;">Uložiť krok</button>`;
+  $('editModalOverlay').classList.add('active');
+  $('stSave').addEventListener('click', async ()=>{
+    const data = {title:$('stTitle').value, description:$('stDesc').value, formName:$('stForm').value,
+      whereConfirm:$('stConfirm').value, roomId:$('stRoom').value, order:parseInt($('stOrder').value)||1};
+    if(stepId){ await updateDoc(doc(db,'onboarding_steps',stepId), data); }
+    else { await addDoc(collection(db,'onboarding_steps'), data); }
+    $('editModalOverlay').classList.remove('active');
+  });
+}
+
+$('editModalClose').addEventListener('click', ()=>$('editModalOverlay').classList.remove('active'));
+$('editModalOverlay').addEventListener('click', e=>{ if(e.target.id==='editModalOverlay') e.currentTarget.classList.remove('active'); });
+
+/* ---------- SEED EXAMPLE DATA ---------- */
+async function seedExampleData(){
+  const r1 = await addDoc(collection(db,'onboarding_rooms'), {name:'MUDr. Jančová', role:'Vstupná zdravotná prehliadka', door:'12', x:25, y:30});
+  const r2 = await addDoc(collection(db,'onboarding_rooms'), {name:'HR oddelenie', role:'Podpis zmluvy, potvrdenia', door:'5', x:60, y:25});
+  const r3 = await addDoc(collection(db,'onboarding_rooms'), {name:'Účtovníčka', role:'Nahlásenie na mzdy', door:'8', x:45, y:65});
+  const r4 = await addDoc(collection(db,'onboarding_rooms'), {name:'Vrátnica', role:'Prístupová karta, kľúče', door:'1', x:78, y:75});
+  await addDoc(collection(db,'onboarding_steps'), {order:1, title:'Vstupná lekárska prehliadka', description:'Navštívte MUDr. Jančovú a absolvujte vstupnú zdravotnú prehliadku.', formName:'Tlačivo o zdravotnej spôsobilosti', whereConfirm:'potvrdí lekárka priamo na mieste', roomId:r1.id});
+  await addDoc(collection(db,'onboarding_steps'), {order:2, title:'Podpis pracovnej zmluvy', description:'Choďte na HR oddelenie podpísať zmluvu a odovzdať potvrdené tlačivo od lekárky.', formName:'Pracovná zmluva', whereConfirm:'HR oddelenie, dvere č. 5', roomId:r2.id});
+  await addDoc(collection(db,'onboarding_steps'), {order:3, title:'Nahlásenie na mzdovú agendu', description:'Zastavte sa u účtovníčky a nechajte si potvrdiť tlačivo pre mzdové oddelenie.', formName:'Mzdový dotazník', whereConfirm:'účtovníčka, dvere č. 8', roomId:r3.id});
+  await addDoc(collection(db,'onboarding_steps'), {order:4, title:'Prevzatie prístupovej karty', description:'Na vrátnici si vyzdvihnite prístupovú kartu a kľúče od šatne.', formName:'', whereConfirm:'vrátnica, dvere č. 1', roomId:r4.id});
+}
 </script>
 </body>
 </html>
