@@ -371,7 +371,43 @@ button{font-family:inherit; cursor:pointer;}
 .login-error{color:#B23434; font-size:0.8rem; margin-top:6px; display:none;}
 .seed-box{background:var(--cream-100); border-radius:12px; padding:16px; margin-top:16px; font-size:0.82rem; color:var(--ink-700); text-align:center;}
 
+/* ============ ADMIN DASHBOARD ============ */
+.admin-tabbar{display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; border-bottom:2px solid var(--cream-200); padding-bottom:0;}
+.admin-tab{padding:12px 18px; background:none; border:none; border-bottom:3px solid transparent; font-weight:700; font-size:0.88rem; color:var(--ink-500); margin-bottom:-2px;}
+.admin-tab.active{color:var(--maroon-700); border-bottom-color:var(--maroon-600);}
+.admin-panel{display:none;}
+.admin-panel.active{display:block; animation:fadeUp .3s ease;}
+.cms-section{display:none;}
+.cms-section.active{display:block;}
+.cms-list-item{background:#fff; border:1.5px solid var(--cream-200); border-radius:12px; padding:16px 18px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; gap:12px;}
+.cms-list-item .info{flex:1; min-width:0;}
+.cms-list-item .info h5{margin:0 0 4px; font-size:0.92rem; font-weight:800;}
+.cms-list-item .info p{margin:0; font-size:0.78rem; color:var(--ink-500); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.cms-list-item .actions{display:flex; gap:6px; flex:0 0 auto;}
+.cms-list-item .actions button{width:32px; height:32px; border-radius:8px; border:none; background:var(--cream-100); font-size:0.8rem;}
+.cms-add-btn{margin-top:6px;}
+.cms-form-card{background:#fff; border:1.5px solid var(--cream-200); border-radius:var(--radius-md); padding:24px; box-shadow:var(--shadow-card);}
+
+.stats-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:10px;}
+.stat-card{background:#fff; border:1.5px solid var(--cream-200); border-radius:var(--radius-md); padding:20px; text-align:center; box-shadow:var(--shadow-card);}
+.stat-card b{display:block; font-family:var(--font-display); font-size:1.9rem; font-weight:800; color:var(--maroon-700);}
+.stat-card span{font-size:0.74rem; color:var(--ink-500); text-transform:uppercase; letter-spacing:0.04em;}
+.bar-row{display:flex; align-items:center; gap:12px; margin-bottom:9px;}
+.bar-row .lbl{flex:0 0 150px; font-size:0.8rem; font-weight:700; color:var(--ink-700); text-align:right;}
+.bar-row .track{flex:1; height:16px; background:var(--cream-100); border-radius:999px; overflow:hidden;}
+.bar-row .fill{height:100%; background:linear-gradient(90deg, var(--maroon-600), var(--gold-500)); border-radius:999px;}
+.bar-row .val{flex:0 0 34px; font-size:0.78rem; font-weight:700; color:var(--ink-700);}
+
+.log-item{display:flex; gap:12px; padding:12px 14px; border-bottom:1px solid var(--cream-200); font-size:0.82rem;}
+.log-item .log-time{flex:0 0 140px; color:var(--ink-300); font-size:0.74rem;}
+.log-item .log-actor{flex:0 0 160px; font-weight:700; color:var(--maroon-700);}
+.log-item .log-desc{flex:1; color:var(--ink-700);}
+.app-item{background:#fff; border:1.5px solid var(--cream-200); border-radius:12px; padding:16px 18px; margin-bottom:10px;}
+.app-item .app-top{display:flex; justify-content:space-between; font-weight:800; font-size:0.92rem;}
+.app-item .app-meta{font-size:0.8rem; color:var(--ink-500); margin-top:6px; line-height:1.6;}
+
 @media (max-width:1180px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
   .onb-grid{grid-template-columns:1fr;}
   .quick-grid{grid-template-columns:repeat(2,1fr);}
   .pos-grid{grid-template-columns:1fr;}
@@ -418,6 +454,9 @@ button{font-family:inherit; cursor:pointer;}
       <li><button class="nav-item" data-view="contact">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
         Kontakt HR</button></li>
+      <li id="adminNavLi" style="display:none;"><button class="nav-item" data-view="admin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 3.5 9 9 10 5.5-1 9-5 9-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        Admin panel</button></li>
     </ul>
     <div class="sidebar-foot">
       <div class="clock" id="clock">--:--</div>
@@ -444,9 +483,9 @@ button{font-family:inherit; cursor:pointer;}
     <section class="view active" id="view-home">
       <div class="hero">
         <div class="hero-inner">
-          <div class="eyebrow">Sklárska tradícia • Ľudia z Lednických Rovní</div>
-          <h2>Poďte tvoriť sklo, ktoré vydrží generácie.</h2>
-          <p>RONA hľadá šikovné ruky aj ostré hlavy — do výroby, prevádzky aj administratívy. Pozrite si aktuálne voľné pozície alebo nám rovno zanechajte kontakt a ozveme sa vám.</p>
+          <div class="eyebrow" id="homeEyebrow">Sklárska tradícia • Ľudia z Lednických Rovní</div>
+          <h2 id="homeHeading">Poďte tvoriť sklo, ktoré vydrží generácie.</h2>
+          <p id="homeText">RONA hľadá šikovné ruky aj ostré hlavy — do výroby, prevádzky aj administratívy. Pozrite si aktuálne voľné pozície alebo nám rovno zanechajte kontakt a ozveme sa vám.</p>
           <div class="hero-ctas">
             <button class="btn btn-primary" data-view="positions">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -454,9 +493,9 @@ button{font-family:inherit; cursor:pointer;}
             <button class="btn btn-ghost" data-view="apply">Mám záujem o prácu</button>
           </div>
           <div class="stat-strip">
-            <div class="stat"><b>8</b><span>otvorených pozícií</span></div>
-            <div class="stat"><b>3</b><span>zmenné prevádzky</span></div>
-            <div class="stat"><b>5</b><span>krokov do nástupu</span></div>
+            <div class="stat"><b id="stat1Num">8</b><span id="stat1Label">otvorených pozícií</span></div>
+            <div class="stat"><b id="stat2Num">3</b><span id="stat2Label">zmenné prevádzky</span></div>
+            <div class="stat"><b id="stat3Num">5</b><span id="stat3Label">krokov do nástupu</span></div>
           </div>
         </div>
       </div>
@@ -617,15 +656,15 @@ button{font-family:inherit; cursor:pointer;}
     <section class="view" id="view-about">
       <div class="about-grid">
         <div class="about-copy">
-          <h3 style="font-family:var(--font-display); font-size:1.5rem; font-weight:800; margin:0 0 14px;">RONA — sklo s charakterom</h3>
-          <p>V Lednických Rovniach vyrábame úžitkové a dekoratívne sklo, ktoré nájdete na stoloch aj v domácnostiach po celom Slovensku i v zahraničí. Remeslo spájame s modernou technológiou a hlavne — so skúsenými ľuďmi, bez ktorých by to jednoducho nešlo.</p>
-          <p>Sme prevádzka, kde sa stretáva tradičné sklárske remeslo (fúkanie a tvarovanie skla) s presnou strojovou výrobou. Práve preto hľadáme veľmi rôznorodé profesie — od sklárov cez strojníkov až po administratívu.</p>
-          <p>Väčšina našich kolegov je z Piešťan, Lednických Rovní a okolia. Zaučenie zvládnete aj bez predchádzajúcej praxe v sklárstve — základné zručnosti vás naučíme priamo na mieste.</p>
+          <h3 id="aboutHeading" style="font-family:var(--font-display); font-size:1.5rem; font-weight:800; margin:0 0 14px;">RONA — sklo s charakterom</h3>
+          <p id="aboutP1">V Lednických Rovniach vyrábame úžitkové a dekoratívne sklo, ktoré nájdete na stoloch aj v domácnostiach po celom Slovensku i v zahraničí. Remeslo spájame s modernou technológiou a hlavne — so skúsenými ľuďmi, bez ktorých by to jednoducho nešlo.</p>
+          <p id="aboutP2">Sme prevádzka, kde sa stretáva tradičné sklárske remeslo (fúkanie a tvarovanie skla) s presnou strojovou výrobou. Práve preto hľadáme veľmi rôznorodé profesie — od sklárov cez strojníkov až po administratívu.</p>
+          <p id="aboutP3">Väčšina našich kolegov je z Piešťan, Lednických Rovní a okolia. Zaučenie zvládnete aj bez predchádzajúcej praxe v sklárstve — základné zručnosti vás naučíme priamo na mieste.</p>
           <div class="value-list">
-            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Remeslo a tradícia</div>
-            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Bezpečnosť na prvom mieste</div>
-            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Stabilita a istota práce</div>
-            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>Rast a zaučenie na mieste</div>
+            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg><span id="aboutVal1">Remeslo a tradícia</span></div>
+            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg><span id="aboutVal2">Bezpečnosť na prvom mieste</span></div>
+            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg><span id="aboutVal3">Stabilita a istota práce</span></div>
+            <div class="value-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg><span id="aboutVal4">Rast a zaučenie na mieste</span></div>
           </div>
         </div>
         <div class="illus-card">
@@ -636,8 +675,8 @@ button{font-family:inherit; cursor:pointer;}
             <path d="M130 20 v-8 M130 68 v-8 M110 40 h-8 M158 40 h8"/>
           </svg>
           <div>
-            <div class="quote">„Každý kus skla má svoj príbeh — a väčšinu z neho napíšu ruky našich ľudí.“</div>
-            <div class="quote-by">— tím RONA</div>
+            <div class="quote" id="aboutQuote">„Každý kus skla má svoj príbeh — a väčšinu z neho napíšu ruky našich ľudí.“</div>
+            <div class="quote-by" id="aboutQuoteBy">— tím RONA</div>
           </div>
         </div>
       </div>
@@ -695,6 +734,55 @@ button{font-family:inherit; cursor:pointer;}
         </div>
       </div>
       <div class="footer-note">Tip: formulár záujmu môžete vyplniť priamo na tomto tablete v sekcii „Mám záujem“.</div>
+    </section>
+
+    <!-- ADMIN PANEL -->
+    <section class="view" id="view-admin">
+      <div class="admin-tabbar" id="adminTabbar">
+        <button class="admin-tab active" data-atab="content">Obsah webu</button>
+        <button class="admin-tab" data-atab="stats">Štatistiky návštevnosti</button>
+        <button class="admin-tab" data-atab="log">Log úprav a udalostí</button>
+        <button class="admin-tab" data-atab="apps">Prihlášky uchádzačov</button>
+      </div>
+
+      <!-- CONTENT SUBTAB -->
+      <div class="admin-panel active" id="apanel-content">
+        <div class="filter-row" id="cmsSubnav">
+          <button class="chip active" data-csub="home">Domov</button>
+          <button class="chip" data-csub="positions">Pozície</button>
+          <button class="chip" data-csub="benefits">Benefity</button>
+          <button class="chip" data-csub="faq">FAQ</button>
+          <button class="chip" data-csub="contacts">Kontakty</button>
+          <button class="chip" data-csub="about">O spoločnosti</button>
+        </div>
+        <div class="cms-section active" id="cms-home"></div>
+        <div class="cms-section" id="cms-positions"></div>
+        <div class="cms-section" id="cms-benefits"></div>
+        <div class="cms-section" id="cms-faq"></div>
+        <div class="cms-section" id="cms-contacts"></div>
+        <div class="cms-section" id="cms-about"></div>
+      </div>
+
+      <!-- STATS SUBTAB -->
+      <div class="admin-panel" id="apanel-stats">
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="section-head"><h3>Návštevy podľa sekcie</h3></div>
+        <div id="statsBars"></div>
+        <div class="section-head"><h3>Návštevy za posledných 7 dní</h3></div>
+        <div id="statsDaily"></div>
+      </div>
+
+      <!-- LOG SUBTAB -->
+      <div class="admin-panel" id="apanel-log">
+        <div class="section-head"><h3>Posledné úpravy a udalosti</h3><span class="link" style="font-size:0.8rem; color:var(--ink-500);">zobrazených posledných 100</span></div>
+        <div id="logList"></div>
+      </div>
+
+      <!-- APPLICATIONS SUBTAB -->
+      <div class="admin-panel" id="apanel-apps">
+        <div class="section-head"><h3>Odoslané prihlášky záujemcov</h3></div>
+        <div id="appsList"></div>
+      </div>
     </section>
 
   </main>
@@ -844,7 +932,7 @@ function renderPositions(filter='all'){
   grid.innerHTML = list.map(p=>`
     <div class="pos-card">
       ${p.badge? `<span class="badge ${p.badge}">${p.badgeText}</span>`:''}
-      <div class="pos-icon">${svgIcon(ICONS[p.icon])}</div>
+      <div class="pos-icon">${svgIcon(ICONS[p.icon]||ICONS.doc)}</div>
       <h4>${p.name}</h4>
       <p class="desc">${p.desc}</p>
       <div class="pos-meta">
@@ -861,7 +949,7 @@ function renderPositions(filter='all'){
 function renderBenefits(){
   document.getElementById('benefitGrid').innerHTML = BENEFITS.map(b=>`
     <div class="benefit-card">
-      <div class="bi">${svgIcon(BICONS[b.icon])}</div>
+      <div class="bi">${svgIcon(BICONS[b.icon]||BICONS.gift)}</div>
       <h4>${b.title}</h4>
       <p>${b.text}</p>
     </div>`).join('');
@@ -901,7 +989,7 @@ function switchView(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.view===name));
   const titles = {home:['HR Centrum','Vitajte v RONA'],onboarding:['Postup pri nástupe','Postup pri nástupe do zamestnania'],positions:['Kariéra','Voľné pozície'],apply:['Kariéra','Mám záujem o prácu'],
     process:['Kariéra','Priebeh náborového procesu'],benefits:['Zamestnanecké výhody','Benefity v RONA'],
-    about:['O firme','O spoločnosti RONA'],faq:['Kariéra','Časté otázky'],contact:['Kariéra','Kontakt na HR oddelenie']};
+    about:['O firme','O spoločnosti RONA'],faq:['Kariéra','Časté otázky'],contact:['Kariéra','Kontakt na HR oddelenie'],admin:['Administrácia','Admin panel']};
   document.getElementById('crumb').textContent = titles[name][0];
   document.getElementById('pageTitle').textContent = titles[name][1];
   document.getElementById('view-'+name).scrollTop = 0;
@@ -968,6 +1056,7 @@ document.getElementById('applyForm').addEventListener('submit', e=>{
     };
     const store = JSON.parse(localStorage.getItem('rona_zaujmy')||'[]');
     store.push(entry); localStorage.setItem('rona_zaujmy', JSON.stringify(store));
+    if(window.onApplySubmitted) window.onApplySubmitted(entry);
   }catch(err){}
   document.getElementById('formWrap').style.display='none';
   document.getElementById('confirmScreen').classList.add('active');
@@ -1015,7 +1104,7 @@ renderPositionOptions();
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, setDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD2hwcnzcZ1BozqQ9qMgF5b1e3Fkf9YtCI",
@@ -1065,15 +1154,19 @@ onAuthStateChanged(auth, user=>{
     $('adminStatus').style.display='block';
     $('adminStatus').innerHTML = 'Prihlásený: ' + user.email;
     $('editToggleWrap').style.display='flex';
+    $('adminNavLi').style.display='block';
   } else {
     $('adminLinkBtn').textContent = '🔒 Admin prihlásenie';
     $('adminStatus').style.display='none';
     $('editToggleWrap').style.display='none';
+    $('adminNavLi').style.display='none';
     editMode = false;
     $('editModeBtn').textContent = 'Upraviť obsah';
+    if(document.getElementById('view-admin').classList.contains('active')) switchView('home');
   }
   renderFloorplan();
   renderSteps();
+  renderCmsPositions(); renderCmsBenefits(); renderCmsFaq(); renderCmsContacts();
 });
 
 $('editModeBtn').addEventListener('click', ()=>{
@@ -1127,7 +1220,7 @@ function renderFloorplan(){
     fp.querySelectorAll('[data-del-room]').forEach(btn=>{
       btn.addEventListener('click', async e=>{
         e.stopPropagation();
-        if(confirm('Odstrániť túto miestnosť?')) await deleteDoc(doc(db,'onboarding_rooms',btn.dataset.delRoom));
+        if(confirm('Odstrániť túto miestnosť?')){ await deleteDoc(doc(db,'onboarding_rooms',btn.dataset.delRoom)); await logActivity('delete','Plán budovy','Zmazaná miestnosť z plánu'); }
       });
     });
   }
@@ -1191,7 +1284,7 @@ function renderSteps(){
     list.querySelectorAll('[data-edit-step]').forEach(btn=>btn.addEventListener('click', e=>{e.stopPropagation(); openStepEditor(btn.dataset.editStep);}));
     list.querySelectorAll('[data-del-step]').forEach(btn=>btn.addEventListener('click', async e=>{
       e.stopPropagation();
-      if(confirm('Odstrániť tento krok?')) await deleteDoc(doc(db,'onboarding_steps',btn.dataset.delStep));
+      if(confirm('Odstrániť tento krok?')){ await deleteDoc(doc(db,'onboarding_steps',btn.dataset.delStep)); await logActivity('delete','Postup pri nástupe','Zmazaný krok postupu'); }
     }));
   }
 }
@@ -1213,8 +1306,8 @@ function openRoomEditor(roomId){
   $('editModalOverlay').classList.add('active');
   $('rmSave').addEventListener('click', async ()=>{
     const data = {name:$('rmName').value, role:$('rmRole').value, door:$('rmDoor').value, notes:$('rmNotes').value};
-    if(roomId){ await updateDoc(doc(db,'onboarding_rooms',roomId), data); }
-    else { await addDoc(collection(db,'onboarding_rooms'), {...data, x:r.x, y:r.y}); }
+    if(roomId){ await updateDoc(doc(db,'onboarding_rooms',roomId), data); await logActivity('update','Plán budovy',`Upravená miestnosť „${data.name}"`); }
+    else { await addDoc(collection(db,'onboarding_rooms'), {...data, x:r.x, y:r.y}); await logActivity('create','Plán budovy',`Pridaná miestnosť „${data.name}"`); }
     $('editModalOverlay').classList.remove('active');
   });
 }
@@ -1235,8 +1328,8 @@ function openStepEditor(stepId){
   $('stSave').addEventListener('click', async ()=>{
     const data = {title:$('stTitle').value, description:$('stDesc').value, formName:$('stForm').value,
       whereConfirm:$('stConfirm').value, roomId:$('stRoom').value, order:parseInt($('stOrder').value)||1};
-    if(stepId){ await updateDoc(doc(db,'onboarding_steps',stepId), data); }
-    else { await addDoc(collection(db,'onboarding_steps'), data); }
+    if(stepId){ await updateDoc(doc(db,'onboarding_steps',stepId), data); await logActivity('update','Postup pri nástupe',`Upravený krok „${data.title}"`); }
+    else { await addDoc(collection(db,'onboarding_steps'), data); await logActivity('create','Postup pri nástupe',`Pridaný krok „${data.title}"`); }
     $('editModalOverlay').classList.remove('active');
   });
 }
@@ -1254,6 +1347,399 @@ async function seedExampleData(){
   await addDoc(collection(db,'onboarding_steps'), {order:2, title:'Podpis pracovnej zmluvy', description:'Choďte na HR oddelenie podpísať zmluvu a odovzdať potvrdené tlačivo od lekárky.', formName:'Pracovná zmluva', whereConfirm:'HR oddelenie, dvere č. 5', roomId:r2.id});
   await addDoc(collection(db,'onboarding_steps'), {order:3, title:'Nahlásenie na mzdovú agendu', description:'Zastavte sa u účtovníčky a nechajte si potvrdiť tlačivo pre mzdové oddelenie.', formName:'Mzdový dotazník', whereConfirm:'účtovníčka, dvere č. 8', roomId:r3.id});
   await addDoc(collection(db,'onboarding_steps'), {order:4, title:'Prevzatie prístupovej karty', description:'Na vrátnici si vyzdvihnite prístupovú kartu a kľúče od šatne.', formName:'', whereConfirm:'vrátnica, dvere č. 1', roomId:r4.id});
+  await logActivity('seed','Postup pri nástupe','Načítané príkladové dáta (miestnosti a kroky)');
+}
+
+/* ================= ACTIVITY LOG ================= */
+async function logActivity(action, entity, summary){
+  try{
+    await addDoc(collection(db,'activity_log'), {
+      action, entity, summary,
+      actor: auth.currentUser ? auth.currentUser.email : 'návštevník',
+      ts: new Date().toISOString()
+    });
+  }catch(e){ /* logging must never break the app */ }
+}
+
+/* ================= ADMIN TAB NAVIGATION ================= */
+document.getElementById('adminTabbar').addEventListener('click', e=>{
+  const btn = e.target.closest('[data-atab]');
+  if(!btn) return;
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('apanel-'+btn.dataset.atab).classList.add('active');
+  if(btn.dataset.atab==='stats') renderStats();
+  if(btn.dataset.atab==='log') renderLog();
+  if(btn.dataset.atab==='apps') renderApps();
+});
+document.getElementById('cmsSubnav').addEventListener('click', e=>{
+  const btn = e.target.closest('[data-csub]');
+  if(!btn) return;
+  document.querySelectorAll('#cmsSubnav .chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.cms-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('cms-'+btn.dataset.csub).classList.add('active');
+});
+
+/* ================= CONTENT: POSITIONS ================= */
+onSnapshot(collection(db,'content_positions'), snap=>{
+  if(!snap.empty){
+    POSITIONS.length = 0;
+    snap.docs.forEach(d=>POSITIONS.push({id:d.id, ...d.data()}));
+    if(typeof renderPositions==='function') renderPositions(document.querySelector('#filterRow .chip.active')?.dataset.filter||'all');
+    if(typeof renderPositionOptions==='function') renderPositionOptions();
+  }
+  renderCmsPositions();
+});
+
+function renderCmsPositions(){
+  const el = document.getElementById('cms-positions');
+  if(!el) return;
+  el.innerHTML = `<button class="btn btn-primary btn-sm cms-add-btn" id="posAddBtn">+ Pridať pozíciu</button><div id="posListInner" style="margin-top:14px;"></div>`;
+  document.getElementById('posAddBtn').addEventListener('click', ()=>openPositionEditor(null));
+  const inner = document.getElementById('posListInner');
+  inner.innerHTML = POSITIONS.map(p=>`
+    <div class="cms-list-item">
+      <div class="info"><h5>${p.name}</h5><p>${p.desc||''}</p></div>
+      <div class="actions"><button data-pos-edit="${p.id}">✎</button><button data-pos-del="${p.id}">✕</button></div>
+    </div>`).join('') || '<div class="onb-empty-msg">Zatiaľ žiadne pozície.</div>';
+  inner.querySelectorAll('[data-pos-edit]').forEach(b=>b.addEventListener('click', ()=>openPositionEditor(b.dataset.posEdit)));
+  inner.querySelectorAll('[data-pos-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    if(!confirm('Odstrániť túto pozíciu?')) return;
+    const p = POSITIONS.find(x=>x.id===b.dataset.posDel);
+    await deleteDoc(doc(db,'content_positions',b.dataset.posDel));
+    await logActivity('delete','Pozícia', `Zmazaná pozícia „${p?.name||''}"`);
+  }));
+}
+
+function openPositionEditor(id){
+  const p = id ? POSITIONS.find(x=>x.id===id) : {name:'',cat:'vyroba',badge:'',badgeText:'',desc:'',req:[],offer:[],icon:'doc'};
+  const iconOpts = ['flame','gear','box','cog','sparkle','wrench','doc'].map(k=>`<option value="${k}" ${p.icon===k?'selected':''}>${k}</option>`).join('');
+  document.getElementById('editModalBody').innerHTML = `
+    <h3>${id?'Upraviť pozíciu':'Nová pozícia'}</h3>
+    <div class="field"><label>Názov pozície</label><input id="pName" value="${p.name||''}"></div>
+    <div class="form-row">
+      <div class="field"><label>Kategória</label><select id="pCat">
+        <option value="vyroba" ${p.cat==='vyroba'?'selected':''}>Výroba</option>
+        <option value="technicke" ${p.cat==='technicke'?'selected':''}>Technické</option>
+        <option value="ostatne" ${p.cat==='ostatne'?'selected':''}>Ostatné</option></select></div>
+      <div class="field"><label>Ikona</label><select id="pIcon">${iconOpts}</select></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Odznak</label><select id="pBadge">
+        <option value="" ${!p.badge?'selected':''}>Žiadny</option>
+        <option value="urgent" ${p.badge==='urgent'?'selected':''}>Súrne</option>
+        <option value="new" ${p.badge==='new'?'selected':''}>Nová</option>
+        <option value="entry" ${p.badge==='entry'?'selected':''}>Bez skúseností</option></select></div>
+      <div class="field"><label>Text odznaku</label><input id="pBadgeText" value="${p.badgeText||''}"></div>
+    </div>
+    <div class="field"><label>Popis</label><textarea id="pDesc">${p.desc||''}</textarea></div>
+    <div class="field"><label>Požiadavky (každá na nový riadok)</label><textarea id="pReq">${(p.req||[]).join('\\n')}</textarea></div>
+    <div class="field"><label>Ponúkame (každá na nový riadok, 1. riadok = plat, 2. riadok = zmennosť)</label><textarea id="pOffer">${(p.offer||[]).join('\\n')}</textarea></div>
+    <button class="btn btn-primary" id="pSave" style="width:100%; justify-content:center;">Uložiť pozíciu</button>`;
+  document.getElementById('editModalOverlay').classList.add('active');
+  document.getElementById('pSave').addEventListener('click', async ()=>{
+    const data = {
+      name:document.getElementById('pName').value, cat:document.getElementById('pCat').value,
+      icon:document.getElementById('pIcon').value, badge:document.getElementById('pBadge').value,
+      badgeText:document.getElementById('pBadgeText').value, desc:document.getElementById('pDesc').value,
+      req:document.getElementById('pReq').value.split('\\n').map(s=>s.trim()).filter(Boolean),
+      offer:document.getElementById('pOffer').value.split('\\n').map(s=>s.trim()).filter(Boolean)
+    };
+    if(id){ await updateDoc(doc(db,'content_positions',id), data); await logActivity('update','Pozícia',`Upravená pozícia „${data.name}"`); }
+    else { await addDoc(collection(db,'content_positions'), data); await logActivity('create','Pozícia',`Pridaná nová pozícia „${data.name}"`); }
+    document.getElementById('editModalOverlay').classList.remove('active');
+  });
+}
+
+/* ================= CONTENT: BENEFITS ================= */
+onSnapshot(collection(db,'content_benefits'), snap=>{
+  if(!snap.empty){
+    BENEFITS.length = 0;
+    snap.docs.forEach(d=>BENEFITS.push({id:d.id, ...d.data()}));
+    if(typeof renderBenefits==='function') renderBenefits();
+  }
+  renderCmsBenefits();
+});
+function renderCmsBenefits(){
+  const el = document.getElementById('cms-benefits');
+  if(!el) return;
+  el.innerHTML = `<button class="btn btn-primary btn-sm cms-add-btn" id="benAddBtn">+ Pridať benefit</button><div id="benListInner" style="margin-top:14px;"></div>`;
+  document.getElementById('benAddBtn').addEventListener('click', ()=>openBenefitEditor(null));
+  const inner = document.getElementById('benListInner');
+  inner.innerHTML = BENEFITS.map(b=>`
+    <div class="cms-list-item"><div class="info"><h5>${b.title}</h5><p>${b.text||''}</p></div>
+    <div class="actions"><button data-ben-edit="${b.id}">✎</button><button data-ben-del="${b.id}">✕</button></div></div>`).join('') || '<div class="onb-empty-msg">Zatiaľ žiadne benefity.</div>';
+  inner.querySelectorAll('[data-ben-edit]').forEach(b=>b.addEventListener('click', ()=>openBenefitEditor(b.dataset.benEdit)));
+  inner.querySelectorAll('[data-ben-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    if(!confirm('Odstrániť tento benefit?')) return;
+    await deleteDoc(doc(db,'content_benefits',b.dataset.benDel));
+    await logActivity('delete','Benefit','Zmazaný benefit');
+  }));
+}
+function openBenefitEditor(id){
+  const b = id ? BENEFITS.find(x=>x.id===id) : {icon:'gift',title:'',text:''};
+  const iconOpts = Object.keys({meal:1,bus:1,gift:1,sun:1,heart:1,book:1,users:1,calendar:1,shield:1}).map(k=>`<option value="${k}" ${b.icon===k?'selected':''}>${k}</option>`).join('');
+  document.getElementById('editModalBody').innerHTML = `
+    <h3>${id?'Upraviť benefit':'Nový benefit'}</h3>
+    <div class="field"><label>Ikona</label><select id="bIcon">${iconOpts}</select></div>
+    <div class="field"><label>Názov</label><input id="bTitle" value="${b.title||''}"></div>
+    <div class="field"><label>Popis</label><textarea id="bText">${b.text||''}</textarea></div>
+    <button class="btn btn-primary" id="bSave" style="width:100%; justify-content:center;">Uložiť benefit</button>`;
+  document.getElementById('editModalOverlay').classList.add('active');
+  document.getElementById('bSave').addEventListener('click', async ()=>{
+    const data = {icon:document.getElementById('bIcon').value, title:document.getElementById('bTitle').value, text:document.getElementById('bText').value};
+    if(id){ await updateDoc(doc(db,'content_benefits',id), data); await logActivity('update','Benefit',`Upravený benefit „${data.title}"`); }
+    else { await addDoc(collection(db,'content_benefits'), data); await logActivity('create','Benefit',`Pridaný benefit „${data.title}"`); }
+    document.getElementById('editModalOverlay').classList.remove('active');
+  });
+}
+
+/* ================= CONTENT: FAQ ================= */
+onSnapshot(collection(db,'content_faq'), snap=>{
+  if(!snap.empty){
+    FAQS.length = 0;
+    snap.docs.forEach(d=>FAQS.push({id:d.id, ...d.data()}));
+    if(typeof renderFaq==='function') renderFaq();
+  }
+  renderCmsFaq();
+});
+function renderCmsFaq(){
+  const el = document.getElementById('cms-faq');
+  if(!el) return;
+  el.innerHTML = `<button class="btn btn-primary btn-sm cms-add-btn" id="faqAddBtn">+ Pridať otázku</button><div id="faqListInner" style="margin-top:14px;"></div>`;
+  document.getElementById('faqAddBtn').addEventListener('click', ()=>openFaqEditor(null));
+  const inner = document.getElementById('faqListInner');
+  inner.innerHTML = FAQS.map((f,i)=>`
+    <div class="cms-list-item"><div class="info"><h5>${f.q}</h5><p>${f.a||''}</p></div>
+    <div class="actions"><button data-faq-edit="${f.id||i}">✎</button><button data-faq-del="${f.id||i}">✕</button></div></div>`).join('') || '<div class="onb-empty-msg">Zatiaľ žiadne otázky.</div>';
+  inner.querySelectorAll('[data-faq-edit]').forEach(b=>b.addEventListener('click', ()=>openFaqEditor(b.dataset.faqEdit)));
+  inner.querySelectorAll('[data-faq-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    if(!confirm('Odstrániť túto otázku?')) return;
+    await deleteDoc(doc(db,'content_faq',b.dataset.faqDel));
+    await logActivity('delete','FAQ','Zmazaná otázka z FAQ');
+  }));
+}
+function openFaqEditor(id){
+  const f = id ? FAQS.find(x=>x.id===id) : {q:'',a:''};
+  document.getElementById('editModalBody').innerHTML = `
+    <h3>${id?'Upraviť otázku':'Nová otázka'}</h3>
+    <div class="field"><label>Otázka</label><input id="fqQ" value="${f.q||''}"></div>
+    <div class="field"><label>Odpoveď</label><textarea id="fqA">${f.a||''}</textarea></div>
+    <button class="btn btn-primary" id="fqSave" style="width:100%; justify-content:center;">Uložiť otázku</button>`;
+  document.getElementById('editModalOverlay').classList.add('active');
+  document.getElementById('fqSave').addEventListener('click', async ()=>{
+    const data = {q:document.getElementById('fqQ').value, a:document.getElementById('fqA').value};
+    if(id){ await updateDoc(doc(db,'content_faq',id), data); await logActivity('update','FAQ','Upravená otázka FAQ'); }
+    else { await addDoc(collection(db,'content_faq'), data); await logActivity('create','FAQ','Pridaná nová otázka FAQ'); }
+    document.getElementById('editModalOverlay').classList.remove('active');
+  });
+}
+
+/* ================= CONTENT: CONTACTS ================= */
+onSnapshot(collection(db,'content_contacts'), snap=>{
+  if(!snap.empty){
+    CONTACTS.length = 0;
+    snap.docs.forEach(d=>CONTACTS.push({id:d.id, ...d.data()}));
+    if(typeof renderContacts==='function') renderContacts();
+  }
+  renderCmsContacts();
+});
+function renderCmsContacts(){
+  const el = document.getElementById('cms-contacts');
+  if(!el) return;
+  el.innerHTML = `<button class="btn btn-primary btn-sm cms-add-btn" id="conAddBtn">+ Pridať kontakt</button><div id="conListInner" style="margin-top:14px;"></div>`;
+  document.getElementById('conAddBtn').addEventListener('click', ()=>openContactEditor(null));
+  const inner = document.getElementById('conListInner');
+  inner.innerHTML = CONTACTS.map(c=>`
+    <div class="cms-list-item"><div class="info"><h5>${c.name}</h5><p>${c.role||''} · ${c.phone||''}</p></div>
+    <div class="actions"><button data-con-edit="${c.id}">✎</button><button data-con-del="${c.id}">✕</button></div></div>`).join('') || '<div class="onb-empty-msg">Zatiaľ žiadne kontakty.</div>';
+  inner.querySelectorAll('[data-con-edit]').forEach(b=>b.addEventListener('click', ()=>openContactEditor(b.dataset.conEdit)));
+  inner.querySelectorAll('[data-con-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    if(!confirm('Odstrániť tento kontakt?')) return;
+    await deleteDoc(doc(db,'content_contacts',b.dataset.conDel));
+    await logActivity('delete','Kontakt','Zmazaný kontakt HR');
+  }));
+}
+function openContactEditor(id){
+  const c = id ? CONTACTS.find(x=>x.id===id) : {initials:'',name:'',role:'',phone:'',email:''};
+  document.getElementById('editModalBody').innerHTML = `
+    <h3>${id?'Upraviť kontakt':'Nový kontakt'}</h3>
+    <div class="form-row">
+      <div class="field"><label>Meno</label><input id="cName" value="${c.name||''}"></div>
+      <div class="field"><label>Iniciály (napr. JN)</label><input id="cInit" value="${c.initials||''}"></div>
+    </div>
+    <div class="field"><label>Rola</label><input id="cRole" value="${c.role||''}"></div>
+    <div class="form-row">
+      <div class="field"><label>Telefón</label><input id="cPhone" value="${c.phone||''}"></div>
+      <div class="field"><label>E-mail</label><input id="cEmail" value="${c.email||''}"></div>
+    </div>
+    <button class="btn btn-primary" id="cSave" style="width:100%; justify-content:center;">Uložiť kontakt</button>`;
+  document.getElementById('editModalOverlay').classList.add('active');
+  document.getElementById('cSave').addEventListener('click', async ()=>{
+    const data = {name:document.getElementById('cName').value, initials:document.getElementById('cInit').value,
+      role:document.getElementById('cRole').value, phone:document.getElementById('cPhone').value, email:document.getElementById('cEmail').value};
+    if(id){ await updateDoc(doc(db,'content_contacts',id), data); await logActivity('update','Kontakt',`Upravený kontakt „${data.name}"`); }
+    else { await addDoc(collection(db,'content_contacts'), data); await logActivity('create','Kontakt',`Pridaný kontakt „${data.name}"`); }
+    document.getElementById('editModalOverlay').classList.remove('active');
+  });
+}
+
+/* ================= CONTENT: HOME HERO ================= */
+const homeFieldIds = ['homeEyebrow','homeHeading','homeText','stat1Num','stat1Label','stat2Num','stat2Label','stat3Num','stat3Label'];
+onSnapshot(doc(db,'content_home','main'), snap=>{
+  if(snap.exists()){
+    const d = snap.data();
+    homeFieldIds.forEach(k=>{ if(d[k]!==undefined && document.getElementById(k)) document.getElementById(k).textContent = d[k]; });
+  }
+  renderCmsHome();
+});
+function renderCmsHome(){
+  const el = document.getElementById('cms-home');
+  if(!el) return;
+  const cur = {}; homeFieldIds.forEach(k=>{ const n=document.getElementById(k); cur[k]= n?n.textContent:''; });
+  el.innerHTML = `
+    <div class="cms-form-card">
+      <div class="field"><label>Nadpis nad hlavným textom (eyebrow)</label><input id="cmsHomeEyebrow" value="${cur.homeEyebrow}"></div>
+      <div class="field"><label>Hlavný nadpis</label><input id="cmsHomeHeading" value="${cur.homeHeading}"></div>
+      <div class="field"><label>Hlavný text</label><textarea id="cmsHomeText">${cur.homeText}</textarea></div>
+      <div class="form-row">
+        <div class="field"><label>Štatistika 1 — číslo</label><input id="cmsStat1Num" value="${cur.stat1Num}"></div>
+        <div class="field"><label>Štatistika 1 — popis</label><input id="cmsStat1Label" value="${cur.stat1Label}"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Štatistika 2 — číslo</label><input id="cmsStat2Num" value="${cur.stat2Num}"></div>
+        <div class="field"><label>Štatistika 2 — popis</label><input id="cmsStat2Label" value="${cur.stat2Label}"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Štatistika 3 — číslo</label><input id="cmsStat3Num" value="${cur.stat3Num}"></div>
+        <div class="field"><label>Štatistika 3 — popis</label><input id="cmsStat3Label" value="${cur.stat3Label}"></div>
+      </div>
+      <button class="btn btn-primary" id="homeSave" style="width:100%; justify-content:center;">Uložiť domovskú obrazovku</button>
+    </div>`;
+  document.getElementById('homeSave').addEventListener('click', async ()=>{
+    const data = {
+      homeEyebrow:document.getElementById('cmsHomeEyebrow').value, homeHeading:document.getElementById('cmsHomeHeading').value,
+      homeText:document.getElementById('cmsHomeText').value, stat1Num:document.getElementById('cmsStat1Num').value,
+      stat1Label:document.getElementById('cmsStat1Label').value, stat2Num:document.getElementById('cmsStat2Num').value,
+      stat2Label:document.getElementById('cmsStat2Label').value, stat3Num:document.getElementById('cmsStat3Num').value,
+      stat3Label:document.getElementById('cmsStat3Label').value
+    };
+    await setDoc(doc(db,'content_home','main'), data, {merge:true});
+    await logActivity('update','Domovská obrazovka','Upravený obsah domovskej obrazovky');
+  });
+}
+
+/* ================= CONTENT: ABOUT ================= */
+const aboutFieldIds = ['aboutHeading','aboutP1','aboutP2','aboutP3','aboutVal1','aboutVal2','aboutVal3','aboutVal4','aboutQuote','aboutQuoteBy'];
+onSnapshot(doc(db,'content_about','main'), snap=>{
+  if(snap.exists()){
+    const d = snap.data();
+    aboutFieldIds.forEach(k=>{ if(d[k]!==undefined && document.getElementById(k)) document.getElementById(k).textContent = d[k]; });
+  }
+  renderCmsAbout();
+});
+function renderCmsAbout(){
+  const el = document.getElementById('cms-about');
+  if(!el) return;
+  const cur = {}; aboutFieldIds.forEach(k=>{ const n=document.getElementById(k); cur[k]= n?n.textContent:''; });
+  el.innerHTML = `
+    <div class="cms-form-card">
+      <div class="field"><label>Nadpis</label><input id="cmsAboutHeading" value="${cur.aboutHeading}"></div>
+      <div class="field"><label>Odsek 1</label><textarea id="cmsAboutP1">${cur.aboutP1}</textarea></div>
+      <div class="field"><label>Odsek 2</label><textarea id="cmsAboutP2">${cur.aboutP2}</textarea></div>
+      <div class="field"><label>Odsek 3</label><textarea id="cmsAboutP3">${cur.aboutP3}</textarea></div>
+      <div class="form-row">
+        <div class="field"><label>Hodnota 1</label><input id="cmsAboutVal1" value="${cur.aboutVal1}"></div>
+        <div class="field"><label>Hodnota 2</label><input id="cmsAboutVal2" value="${cur.aboutVal2}"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Hodnota 3</label><input id="cmsAboutVal3" value="${cur.aboutVal3}"></div>
+        <div class="field"><label>Hodnota 4</label><input id="cmsAboutVal4" value="${cur.aboutVal4}"></div>
+      </div>
+      <div class="field"><label>Citát</label><textarea id="cmsAboutQuote">${cur.aboutQuote}</textarea></div>
+      <div class="field"><label>Autor citátu</label><input id="cmsAboutQuoteBy" value="${cur.aboutQuoteBy}"></div>
+      <button class="btn btn-primary" id="aboutSave" style="width:100%; justify-content:center;">Uložiť sekciu O spoločnosti</button>
+    </div>`;
+  document.getElementById('aboutSave').addEventListener('click', async ()=>{
+    const data = {}; aboutFieldIds.forEach(k=>{ const el2 = document.getElementById('cms'+k[0].toUpperCase()+k.slice(1)); if(el2) data[k]=el2.value; });
+    await setDoc(doc(db,'content_about','main'), data, {merge:true});
+    await logActivity('update','O spoločnosti','Upravený obsah sekcie O spoločnosti');
+  });
+}
+
+/* ================= ANALYTICS ================= */
+const _origSwitchView = window.switchView;
+window.switchView = function(name){
+  _origSwitchView(name);
+  trackView(name);
+};
+function trackView(name){
+  try{ addDoc(collection(db,'analytics_events'), {view:name, ts:new Date().toISOString()}); }catch(e){}
+}
+trackView('home');
+
+let analyticsCache = [];
+onSnapshot(collection(db,'analytics_events'), snap=>{
+  analyticsCache = snap.docs.map(d=>d.data());
+  if(document.getElementById('apanel-stats').classList.contains('active')) renderStats();
+});
+
+function renderStats(){
+  const total = analyticsCache.length;
+  const viewLabels = {home:'Domov', onboarding:'Postup pri nástupe', positions:'Voľné pozície', apply:'Mám záujem', process:'Priebeh náboru', benefits:'Benefity', about:'O spoločnosti', faq:'FAQ', contact:'Kontakt', admin:'Admin panel'};
+  const counts = {};
+  analyticsCache.forEach(ev=>{ counts[ev.view] = (counts[ev.view]||0)+1; });
+  const appsCount = appsCache.length;
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><b>${total}</b><span>Celkovo zobrazení</span></div>
+    <div class="stat-card"><b>${counts.positions||0}</b><span>Zobrazenia pozícií</span></div>
+    <div class="stat-card"><b>${appsCount}</b><span>Odoslané prihlášky</span></div>
+    <div class="stat-card"><b>${counts.onboarding||0}</b><span>Zobrazenia postupu</span></div>`;
+
+  const maxCount = Math.max(1, ...Object.values(counts));
+  document.getElementById('statsBars').innerHTML = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+    <div class="bar-row"><div class="lbl">${viewLabels[k]||k}</div><div class="track"><div class="fill" style="width:${(v/maxCount*100).toFixed(0)}%"></div></div><div class="val">${v}</div></div>`).join('') || '<div class="onb-empty-msg">Zatiaľ žiadne dáta.</div>';
+
+  const days = {};
+  const now = new Date();
+  for(let i=6;i>=0;i--){ const d=new Date(now); d.setDate(now.getDate()-i); days[d.toISOString().slice(0,10)]=0; }
+  analyticsCache.forEach(ev=>{ const day=(ev.ts||'').slice(0,10); if(days[day]!==undefined) days[day]++; });
+  const maxDay = Math.max(1, ...Object.values(days));
+  document.getElementById('statsDaily').innerHTML = Object.entries(days).map(([day,v])=>`
+    <div class="bar-row"><div class="lbl">${day}</div><div class="track"><div class="fill" style="width:${(v/maxDay*100).toFixed(0)}%"></div></div><div class="val">${v}</div></div>`).join('');
+}
+
+/* ================= ACTIVITY LOG VIEW ================= */
+onSnapshot(query(collection(db,'activity_log'), orderBy('ts','desc'), limit(100)), snap=>{
+  const list = document.getElementById('logList');
+  if(!list) return;
+  const items = snap.docs.map(d=>d.data());
+  list.innerHTML = items.map(it=>`
+    <div class="log-item"><div class="log-time">${(it.ts||'').replace('T',' ').slice(0,16)}</div><div class="log-actor">${it.actor||''}</div><div class="log-desc"><strong>${it.entity||''}</strong> — ${it.summary||''}</div></div>`).join('') || '<div class="onb-empty-msg">Zatiaľ žiadne záznamy.</div>';
+});
+
+/* ================= JOB APPLICATIONS ================= */
+window.onApplySubmitted = async function(entry){
+  try{
+    await addDoc(collection(db,'job_applications'), entry);
+    await logActivity('application','Prihláška', `Nová prihláška: ${entry.meno} ${entry.priezvisko} (${entry.pozicia||'—'})`);
+  }catch(e){}
+};
+let appsCache = [];
+onSnapshot(collection(db,'job_applications'), snap=>{
+  appsCache = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>(b.cas||'').localeCompare(a.cas||''));
+  renderApps();
+});
+function renderApps(){
+  const el = document.getElementById('appsList');
+  if(!el) return;
+  el.innerHTML = appsCache.map(a=>{
+    const posName = POSITIONS.find(p=>p.id===a.pozicia)?.name || a.pozicia || '—';
+    return `<div class="app-item"><div class="app-top"><span>${a.meno} ${a.priezvisko}</span><span>${a.code||''}</span></div>
+      <div class="app-meta">${posName} · ${a.telefon||''} ${a.email?(' · '+a.email):''}${a.zmena?(' · '+a.zmena):''}<br>${(a.cas||'').replace('T',' ').slice(0,16)}${a.poznamka?('<br>„'+a.poznamka+'"'):''}</div></div>`;
+  }).join('') || '<div class="onb-empty-msg">Zatiaľ žiadne prihlášky.</div>';
 }
 </script>
 </body>
