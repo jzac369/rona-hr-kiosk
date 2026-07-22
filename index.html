@@ -1027,6 +1027,7 @@ const POSITIONS = [
    offer:['1 050 – 1 350 € / mesiac (brutto)','Jednozmenná prevádzka, pružný začiatok','Možnosť čiastočného home office'],
    icon:'doc'}
 ];
+const POSITIONS_DEFAULT = POSITIONS.map(x=>({...x}));
 
 const ICONS = {
   flame:'<path d="M12 2c1 3-2 4-2 7a4 4 0 0 0 8 0c0-1-1-2-1-2 1 4-1 6-3 6a5 5 0 0 1-5-5c0-3 3-4 3-6z"/><path d="M8 15a4 4 0 0 0 8 0"/>',
@@ -1049,6 +1050,7 @@ const BENEFITS = [
   {icon:'calendar', title:'Predĺžená dovolenka', text:'Dodatočné dni dovolenky nad zákonný rámec podľa odpracovaných rokov.'},
   {icon:'shield', title:'Príspevok na dôchodkové sporenie', text:'Prispievame na doplnkové dôchodkové sporenie (III. pilier).'}
 ];
+const BENEFITS_DEFAULT = BENEFITS.map(x=>({...x}));
 const BICONS = {
   meal:'<path d="M6 2v8a2 2 0 0 0 4 0V2M8 10v12M18 2v20M18 2a4 4 0 0 0-4 4v3h4"/>',
   bus:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="18" r="1.6"/><path d="M3 12h18"/>',
@@ -1091,12 +1093,14 @@ const FAQS = [
   {q:'Je možné požiadať o preradenie na inú zmenu zo zdravotných dôvodov?', a:'Áno, v odôvodnených prípadoch (napr. na základe lekárskeho odporúčania) je preradenie na inú zmennosť možné po dohode so zamestnávateľom.'},
   {q:'Ako nahlásim zmenu osobných údajov (adresa, priezvisko a pod.)?', a:'Zmenu stačí nahlásiť HR oddeleniu osobne, telefonicky alebo e-mailom — údaje vám aktualizujú vo všetkých potrebných systémoch.'}
 ];
+const FAQS_DEFAULT = FAQS.map(x=>({...x}));
 
 const CONTACTS = [
   {initials:'JN', name:'Jana Nováková', role:'HR manažérka', phone:'+421 42 111 22 33', email:'j.novakova@rona.sk'},
   {initials:'MK', name:'Marek Krajčí', role:'Náborový špecialista — výroba', phone:'+421 42 111 22 34', email:'m.krajci@rona.sk'},
   {initials:'ES', name:'Eva Slezáková', role:'HR administratíva', phone:'+421 42 111 22 35', email:'e.slezakova@rona.sk'}
 ];
+const CONTACTS_DEFAULT = CONTACTS.map(x=>({...x}));
 
 /* ============ RENDER ============ */
 function svgIcon(paths){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;}
@@ -1111,7 +1115,7 @@ function renderPositions(filter='all'){
       <h4>${p.name}</h4>
       <p class="desc">${p.desc}</p>
       <div class="pos-meta">
-        <span>${svgIcon('<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>')}${p.offer[0]}</span>
+        <span>${svgIcon('<path d="M17 6a5 5 0 0 0-8.5 3.5H15M17 12.5H8.5A5 5 0 0 0 17 15M5.5 9.5h6M5.5 12.5h6"/>')}${p.offer[0]}</span>
         <span>${svgIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>')}${p.offer[1]}</span>
       </div>
       <div class="pos-actions">
@@ -1379,10 +1383,10 @@ onAuthStateChanged(auth, user=>{
     $('adminStatus').innerHTML = 'Prihlásený: ' + user.email;
     $('editToggleWrap').style.display='flex';
     $('adminNavLi').style.display='block';
-    seedContentIfEmpty('content_positions', POSITIONS);
-    seedContentIfEmpty('content_benefits', BENEFITS);
-    seedContentIfEmpty('content_faq', FAQS);
-    seedContentIfEmpty('content_contacts', CONTACTS);
+    seedContentIfEmpty('content_positions', POSITIONS_DEFAULT, 'name');
+    seedContentIfEmpty('content_benefits', BENEFITS_DEFAULT, 'title');
+    seedContentIfEmpty('content_faq', FAQS_DEFAULT, 'q');
+    seedContentIfEmpty('content_contacts', CONTACTS_DEFAULT, 'name');
     seedOnboardingIfEmpty();
     attachQuestionnaireTypesIfMissing();
   } else {
@@ -1540,15 +1544,20 @@ async function seedExampleData(){
 }
 
 /* ================= ACTIVITY LOG ================= */
-async function seedContentIfEmpty(colName, arr){
+async function seedContentIfEmpty(colName, arr, matchField){
   try{
     const snap = await getDocs(collection(db,colName));
-    if(snap.empty && arr.length>0){
-      for(const item of arr.slice()){
+    const existing = new Set(snap.docs.map(d=>d.data()[matchField]));
+    let addedCount = 0;
+    for(const item of arr){
+      if(!existing.has(item[matchField])){
         const {id, ...data} = item;
         await addDoc(collection(db,colName), data);
+        addedCount++;
       }
-      await logActivity('seed', colName, `Predvolený obsah automaticky prenesený do databázy (${arr.length} položiek)`);
+    }
+    if(addedCount>0){
+      await logActivity('seed', colName, `Doplnené chýbajúce predvolené položky do databázy (${addedCount})`);
     }
   }catch(e){ /* seeding must never break the app */ }
 }
