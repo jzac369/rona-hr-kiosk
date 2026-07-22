@@ -464,27 +464,27 @@ button{font-family:inherit; cursor:pointer;}
 .export-btn-row{display:flex; justify-content:flex-end; margin-bottom:12px;}
 
 /* ============ HOME TILES ============ */
-.home-tiles-wrap{display:flex; flex-direction:column; height:calc(100vh - 110px); padding:0 34px 30px;}
+.home-tiles-wrap{display:flex; flex-direction:column; align-items:center; justify-content:center; height:calc(100vh - 110px); padding:0 34px 30px;}
 .home-tiles-header{text-align:center; margin-bottom:22px;}
 .home-tiles-header h2{font-family:var(--font-display); font-size:1.7rem; font-weight:800; color:var(--ink-900); margin:0 0 6px;}
 .home-tiles-header p{margin:0; color:var(--ink-500); font-size:0.9rem;}
-.home-tiles{flex:1; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:22px; min-height:0;}
+.home-tiles{width:70%; height:70%; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:16px; min-height:0;}
 .home-tile{
-  border-radius:28px; border:none; position:relative; overflow:hidden;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
-  color:#fff; text-align:center; padding:20px;
+  border-radius:20px; border:none; position:relative; overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  color:#fff; text-align:center; padding:14px;
   transition:transform .15s ease, box-shadow .2s ease;
 }
 .home-tile:active{transform:scale(0.97);}
 .home-tile:hover{transform:translateY(-3px);}
-.home-tile .ht-icon{width:74px; height:74px; border-radius:20px; background:rgba(255,255,255,0.16); display:flex; align-items:center; justify-content:center;}
-.home-tile .ht-icon svg{width:38px; height:38px; color:#fff;}
-.home-tile h3{font-family:var(--font-display); font-size:1.4rem; font-weight:800; margin:0;}
-.home-tile p{margin:0; font-size:0.85rem; color:rgba(255,255,255,0.85); max-width:320px; line-height:1.4;}
-.home-tile.t1{background:linear-gradient(135deg, var(--maroon-700), var(--maroon-600));}
-.home-tile.t2{background:linear-gradient(135deg, var(--maroon-600), var(--maroon-500));}
-.home-tile.t3{background:linear-gradient(135deg, #8A6710, var(--gold-500));}
-.home-tile.t4{background:linear-gradient(135deg, var(--ink-700), var(--ink-900));}
+.home-tile .ht-icon{width:52px; height:52px; border-radius:14px; background:rgba(255,255,255,0.16); display:flex; align-items:center; justify-content:center;}
+.home-tile .ht-icon svg{width:27px; height:27px; color:#fff;}
+.home-tile h3{font-family:var(--font-display); font-size:1rem; font-weight:800; margin:0;}
+.home-tile p{margin:0; font-size:0.6rem; color:rgba(255,255,255,0.85); max-width:320px; line-height:1.4;}
+.home-tile.t1{background:linear-gradient(135deg, var(--maroon-800), var(--maroon-700));}
+.home-tile.t2{background:linear-gradient(135deg, var(--maroon-700), var(--maroon-600));}
+.home-tile.t3{background:linear-gradient(135deg, var(--maroon-600), var(--maroon-500));}
+.home-tile.t4{background:linear-gradient(135deg, var(--maroon-900), var(--maroon-800));}
 .home-tiles-footer{text-align:center; margin-top:18px; font-size:0.72rem; color:var(--ink-300);}
 
 @media (max-width:900px){
@@ -509,10 +509,10 @@ button{font-family:inherit; cursor:pointer;}
 }
 .back-btn:active{transform:scale(0.96);}
 .back-btn svg{width:14px; height:14px;}
-.back-btn.back-t1{background:linear-gradient(135deg, var(--maroon-700), var(--maroon-600));}
-.back-btn.back-t2{background:linear-gradient(135deg, var(--maroon-600), var(--maroon-500));}
-.back-btn.back-t3{background:linear-gradient(135deg, #8A6710, var(--gold-500));}
-.back-btn.back-t4{background:linear-gradient(135deg, var(--ink-700), var(--ink-900));}
+.back-btn.back-t1{background:linear-gradient(135deg, var(--maroon-800), var(--maroon-700));}
+.back-btn.back-t2{background:linear-gradient(135deg, var(--maroon-700), var(--maroon-600));}
+.back-btn.back-t3{background:linear-gradient(135deg, var(--maroon-600), var(--maroon-500));}
+.back-btn.back-t4{background:linear-gradient(135deg, var(--maroon-900), var(--maroon-800));}
 
 /* ============ FAQ PAGINATION ============ */
 .pagination{display:flex; gap:8px; justify-content:center; margin-top:22px;}
