@@ -781,19 +781,13 @@ button{font-family:inherit; cursor:pointer;}
         </div>
       </div>
       <div class="onb-grid">
-        <div class="floorplan-wrap">
-          <h4 data-i18n="onb.planTitle">Plán budovy</h4>
-          <div class="fp-hint" id="fpHint" data-i18n="onb.hint">Kliknite na krok vpravo — miestnosť sa zvýrazní na pláne.</div>
-          <div class="floorplan" id="floorplan"><div class="fp-empty" id="fpEmpty" data-i18n="onb.loading">Plán sa načítava…</div></div>
-          <button class="btn btn-outline btn-sm fp-add-room" id="addRoomBtn" style="display:none;" data-i18n="onb.addRoom">+ Pridať miestnosť</button>
-        </div>
-        <div class="steps-wrap">
+        <div class="steps-wrap" style="grid-column:1 / -1;">
           <h4 data-i18n="onb.stepsTitle">Postup krokov</h4>
           <div id="stepsList"></div>
           <button class="btn btn-outline btn-sm onb-add-step" id="addStepBtn" style="display:none;" data-i18n="onb.addStep">+ Pridať krok</button>
         </div>
       </div>
-      <div class="footer-note" data-i18n="onb.footer">Poznámka: plán budovy je zatiaľ orientačný a bude nahradený reálnym pôdorysom.</div>
+      <div class="footer-note" data-i18n="onb.footer2">Kroky postupu môžete upraviť v admin režime.</div>
     </section>
 
     <!-- FIRST DAY -->
@@ -868,6 +862,7 @@ button{font-family:inherit; cursor:pointer;}
         <button class="admin-tab" data-atab="stats">Štatistiky návštevnosti</button>
         <button class="admin-tab" data-atab="log">Log úprav a udalostí</button>
         <button class="admin-tab" data-atab="apps">Prihlášky uchádzačov</button>
+        <button class="admin-tab" data-atab="quest">Dotazníky</button>
       </div>
 
       <!-- CONTENT SUBTAB -->
@@ -917,6 +912,19 @@ button{font-family:inherit; cursor:pointer;}
         </div>
         <div id="appsList"></div>
       </div>
+
+      <!-- QUESTIONNAIRES SUBTAB -->
+      <div class="admin-panel" id="apanel-quest">
+        <div class="section-head"><h3>Vyplnené dotazníky</h3></div>
+        <div class="export-btn-row"><button class="btn btn-outline btn-sm" id="exportQuestBtn">⬇ Exportovať CSV</button></div>
+        <div class="app-status-filter" id="questTypeFilter">
+          <button class="chip active" data-qtype="all">Všetky</button>
+          <button class="chip" data-qtype="health">Zdravotná spôsobilosť</button>
+          <button class="chip" data-qtype="clothing">Pracovný odev</button>
+          <button class="chip" data-qtype="meal">Stravovacia karta</button>
+        </div>
+        <div id="questList"></div>
+      </div>
     </section>
 
   </main>
@@ -950,6 +958,14 @@ button{font-family:inherit; cursor:pointer;}
   <div class="modal" style="max-width:480px;">
     <button class="modal-close" id="editModalClose">✕</button>
     <div id="editModalBody"></div>
+  </div>
+</div>
+
+<!-- QUESTIONNAIRE (public-facing forms attached to onboarding steps) -->
+<div class="modal-overlay" id="questionnaireOverlay">
+  <div class="modal" style="max-width:520px;">
+    <button class="modal-close" id="questionnaireClose">✕</button>
+    <div id="questionnaireBody"></div>
   </div>
 </div>
 
@@ -1063,7 +1079,17 @@ const FAQS = [
   {q:'Dá sa po nástupe zmeniť pracovná pozícia?', a:'Áno, ak sa uvoľní vhodné miesto a zamestnanec prejaví záujem, presun medzi pozíciami je po dohode s nadriadeným možný.'},
   {q:'Môžem priniesť odporúčanie od súčasného zamestnanca?', a:'Áno, odporúčanie od kolegu radi zohľadníme — stačí ho spomenúť v poznámke pri podaní záujmu alebo priamo na pohovore.'},
   {q:'Čo ak ochoriem počas skúšobnej doby?', a:'Práceneschopnosť sa rieši rovnako ako u ostatných zamestnancov — nahláste ju čo najskôr HR oddeleniu, ktoré vás prevedie ďalším postupom.'},
-  {q:'Je možné pracovať na zmeny len cez víkend?', a:'Pri niektorých pozíciách je možná aj víkendová brigáda — konkrétnu dostupnosť takéhoto úväzku vám potvrdí HR tím podľa aktuálnej potreby.'}
+  {q:'Je možné pracovať na zmeny len cez víkend?', a:'Pri niektorých pozíciách je možná aj víkendová brigáda — konkrétnu dostupnosť takéhoto úväzku vám potvrdí HR tím podľa aktuálnej potreby.'},
+  {q:'Ponúkate kariérne poradenstvo pre absolventov?', a:'Áno, absolventom radi poradíme, ktorá pozícia zodpovedá ich vzdelaniu a záujmom, aj keď ešte nemajú prax.'},
+  {q:'Je potrebné doložiť výpis z registra trestov?', a:'Pri niektorých pozíciách (napr. so zvýšenou hmotnou zodpovednosťou) áno. HR vás vopred informuje, ak je to pre danú pozíciu potrebné.'},
+  {q:'Dá sa dohodnutá zmennosť neskôr zmeniť?', a:'Áno, zmena zmennosti je možná po dohode s nadriadeným, v závislosti od prevádzkových možností daného úseku.'},
+  {q:'Preplácate cestovné náklady na vstupný pohovor?', a:'Štandardne cestovné náklady na pohovor nepreplácame, no v individuálnych prípadoch sa dá táto otázka prekonzultovať s HR.'},
+  {q:'Existuje adaptačný program aj po prvom mesiaci?', a:'Áno, sledujeme spokojnosť a výkon nových zamestnancov priebežne aj po skúšobnej dobe, nielen počas prvého mesiaca.'},
+  {q:'Môžem pracovať na dohodu popri štúdiu?', a:'Áno, pri vybraných pozíciách ponúkame aj brigádnickú prácu vhodnú pre študentov strednej či vysokej školy.'},
+  {q:'Aké sú podmienky skončenia pracovného pomeru z mojej strany?', a:'Platí štandardná zákonná výpovedná doba podľa Zákonníka práce, presné podmienky nájdete vo vašej pracovnej zmluve.'},
+  {q:'Ponúkate príspevok na deti alebo rodinné benefity?', a:'Áno, v rámci sociálneho fondu je možné čerpať príspevky súvisiace s rodinou — podrobnosti vám poskytne odborový zväz alebo HR.'},
+  {q:'Je možné požiadať o preradenie na inú zmenu zo zdravotných dôvodov?', a:'Áno, v odôvodnených prípadoch (napr. na základe lekárskeho odporúčania) je preradenie na inú zmennosť možné po dohode so zamestnávateľom.'},
+  {q:'Ako nahlásim zmenu osobných údajov (adresa, priezvisko a pod.)?', a:'Zmenu stačí nahlásiť HR oddeleniu osobne, telefonicky alebo e-mailom — údaje vám aktualizujú vo všetkých potrebných systémoch.'}
 ];
 
 const CONTACTS = [
@@ -1358,6 +1384,7 @@ onAuthStateChanged(auth, user=>{
     seedContentIfEmpty('content_faq', FAQS);
     seedContentIfEmpty('content_contacts', CONTACTS);
     seedOnboardingIfEmpty();
+    attachQuestionnaireTypesIfMissing();
   } else {
     $('adminLinkIcon').textContent = '🔒';
     $('adminLinkLabel').textContent = t('admin.login');
@@ -1368,7 +1395,6 @@ onAuthStateChanged(auth, user=>{
     $('editModeBtn').textContent = 'Upraviť obsah';
     if(document.getElementById('view-admin').classList.contains('active')) switchView('home');
   }
-  renderFloorplan();
   renderSteps();
   renderCmsPositions(); renderCmsBenefits(); renderCmsFaq(); renderCmsContacts();
 });
@@ -1376,114 +1402,49 @@ onAuthStateChanged(auth, user=>{
 $('editModeBtn').addEventListener('click', ()=>{
   editMode = !editMode;
   $('editModeBtn').textContent = editMode ? 'Skončiť úpravu' : 'Upraviť obsah';
-  $('fpHint').textContent = editMode ? 'Miestnosti presuniete ťahaním. Kliknutím na ✕ ich odstránite.' : 'Kliknite na krok vpravo — miestnosť sa zvýrazní na pláne.';
-  $('addRoomBtn').style.display = editMode ? 'block':'none';
   $('addStepBtn').style.display = editMode ? 'block':'none';
-  renderFloorplan();
   renderSteps();
 });
 
 /* ---------- FIRESTORE LISTENERS ---------- */
 onSnapshot(collection(db,'onboarding_rooms'), snap=>{
   rooms = snap.docs.map(d=>({id:d.id, ...d.data()}));
-  renderFloorplan();
 });
 onSnapshot(collection(db,'onboarding_steps'), snap=>{
   steps = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
   renderSteps();
 });
 
-/* ---------- RENDER FLOORPLAN ---------- */
-function renderFloorplan(){
-  const fp = $('floorplan');
-  if(rooms.length===0){
-    fp.innerHTML = `<div class="fp-empty">${isAdmin ? 'Plán je zatiaľ prázdny. Pridajte prvú miestnosť tlačidlom nižšie, alebo načítajte príkladové dáta.' : 'Plán budovy zatiaľ nie je nastavený.'}</div>`;
-    if(isAdmin && rooms.length===0 && !fp.querySelector('.seed-inline')){
-      const seed = document.createElement('div');
-      seed.className='seed-inline';
-      seed.style.cssText='position:absolute; bottom:14px; left:50%; transform:translateX(-50%);';
-      seed.innerHTML = `<button class="btn btn-primary btn-sm" id="seedBtn">Načítať príkladové dáta</button>`;
-      fp.appendChild(seed);
-      document.getElementById('seedBtn').addEventListener('click', seedExampleData);
-    }
-    return;
-  }
-  fp.innerHTML = rooms.map(r=>`
-    <div class="fp-room ${editMode?'editable':''}" data-room-id="${r.id}" style="left:${r.x||50}%; top:${r.y||50}%;">
-      ${r.name||'Miestnosť'}<span class="door">${r.role?r.role+' · ':''}dvere ${r.door||'?'}</span>
-      ${editMode?`<div class="room-del" data-del-room="${r.id}">✕</div>`:''}
-    </div>`).join('');
-  if(editMode){
-    fp.querySelectorAll('.fp-room').forEach(el=>{
-      el.addEventListener('pointerdown', startDrag);
-      el.addEventListener('click', e=>{
-        if(e.target.closest('.room-del')) return;
-        openRoomEditor(el.dataset.roomId);
-      });
-    });
-    fp.querySelectorAll('[data-del-room]').forEach(btn=>{
-      btn.addEventListener('click', async e=>{
-        e.stopPropagation();
-        if(confirm('Odstrániť túto miestnosť?')){ await deleteDoc(doc(db,'onboarding_rooms',btn.dataset.delRoom)); await logActivity('delete','Plán budovy','Zmazaná miestnosť z plánu'); }
-      });
-    });
-  }
-}
-
-function startDrag(e){
-  dragTarget = e.currentTarget;
-  const fp = $('floorplan');
-  const rect = fp.getBoundingClientRect();
-  function move(ev){
-    const x = Math.min(96, Math.max(4, ((ev.clientX-rect.left)/rect.width)*100));
-    const y = Math.min(94, Math.max(6, ((ev.clientY-rect.top)/rect.height)*100));
-    dragTarget.style.left = x+'%';
-    dragTarget.style.top = y+'%';
-  }
-  function up(ev){
-    document.removeEventListener('pointermove', move);
-    document.removeEventListener('pointerup', up);
-    const x = parseFloat(dragTarget.style.left);
-    const y = parseFloat(dragTarget.style.top);
-    updateDoc(doc(db,'onboarding_rooms',dragTarget.dataset.roomId), {x, y});
-    dragTarget=null;
-  }
-  document.addEventListener('pointermove', move);
-  document.addEventListener('pointerup', up);
-}
-
 /* ---------- RENDER STEPS ---------- */
 function renderSteps(){
   const list = $('stepsList');
   if(steps.length===0){
     list.innerHTML = `<div class="onb-empty-msg">${isAdmin? 'Zatiaľ nie sú pridané žiadne kroky postupu.' : 'Postup pri nástupe zatiaľ nie je nastavený.'}</div>`;
+    if(isAdmin && !list.querySelector('#seedBtn')){
+      const seed = document.createElement('div');
+      seed.style.cssText='text-align:center; margin-top:14px;';
+      seed.innerHTML = `<button class="btn btn-primary btn-sm" id="seedBtn">Načítať príkladové dáta</button>`;
+      list.appendChild(seed);
+      document.getElementById('seedBtn').addEventListener('click', seedExampleData);
+    }
     return;
   }
   list.innerHTML = steps.map((s,i)=>`
-    <div class="onb-step" data-step-id="${s.id}" data-room-id="${s.roomId||''}">
+    <div class="onb-step" data-step-id="${s.id}">
       <div class="num">${i+1}</div>
       <div class="body">
         <h5>${s.title||''}</h5>
         <p>${s.description||''}</p>
         ${s.formName?`<div class="meta-line">📄 ${s.formName}${s.whereConfirm? ' · potvrdiť: '+s.whereConfirm:''}</div>`:''}
+        ${s.questionnaireType?`<button class="btn btn-outline btn-sm" data-fill-q="${s.questionnaireType}" style="margin-top:10px;">📋 Vyplniť dotazník</button>`:''}
       </div>
       ${editMode?`<div class="step-edit-actions"><button data-edit-step="${s.id}">✎</button><button data-del-step="${s.id}">✕</button></div>`:''}
     </div>`).join('');
 
-  list.querySelectorAll('.onb-step').forEach(el=>{
-    el.addEventListener('click', e=>{
-      if(e.target.closest('.step-edit-actions')) return;
-      const roomId = el.dataset.roomId;
-      if(!roomId) return;
-      switchView('onboarding');
-      const roomEl = document.querySelector(`.fp-room[data-room-id="${roomId}"]`);
-      if(roomEl){
-        roomEl.classList.add('highlight');
-        roomEl.scrollIntoView({behavior:'smooth', block:'center'});
-        setTimeout(()=>roomEl.classList.remove('highlight'), 3000);
-      }
-    });
-  });
+  list.querySelectorAll('[data-fill-q]').forEach(btn=>btn.addEventListener('click', e=>{
+    e.stopPropagation();
+    openQuestionnaire(btn.dataset.fillQ);
+  }));
   if(editMode){
     list.querySelectorAll('[data-edit-step]').forEach(btn=>btn.addEventListener('click', e=>{e.stopPropagation(); openStepEditor(btn.dataset.editStep);}));
     list.querySelectorAll('[data-del-step]').forEach(btn=>btn.addEventListener('click', async e=>{
@@ -1494,7 +1455,6 @@ function renderSteps(){
 }
 
 /* ---------- ADD BUTTONS ---------- */
-$('addRoomBtn').addEventListener('click', ()=>openRoomEditor(null));
 $('addStepBtn').addEventListener('click', ()=>openStepEditor(null));
 
 /* ---------- EDIT MODALS ---------- */
@@ -1566,10 +1526,10 @@ async function seedExampleData(){
     {order:2, title:'Podpis pracovnej zmluvy', description:'Choďte na HR oddelenie prevziať a podpísať pracovnú zmluvu a súvisiace dokumenty.', formName:'Pracovná zmluva a nástupné dokumenty', whereConfirm:'HR oddelenie, dvere č. 5', roomId:r2.id},
     {order:3, title:'Nahlásenie na mzdovú agendu', description:'Zastavte sa u účtovníčky, nahláste bankový účet a vyplňte mzdový dotazník.', formName:'Mzdový dotazník', whereConfirm:'mzdová účtáreň, dvere č. 8', roomId:r3.id},
     {order:4, title:'Prevzatie prístupovej karty a IT vybavenia', description:'Na IT oddelení dostanete prístupovú kartu, firemný e-mail a prípadné IT vybavenie.', formName:'Preberací protokol IT', whereConfirm:'IT oddelenie, dvere č. 10', roomId:r4.id},
-    {order:5, title:'Vyzdvihnutie pracovného odevu', description:'V sklade OOPP si vyzdvihnite pracovný odev, obuv a ochranné pomôcky podľa vašej pozície.', formName:'Potvrdenie o prevzatí OOPP', whereConfirm:'sklad OOPP, dvere č. 3', roomId:r5.id},
-    {order:6, title:'Vstupná zdravotná prehliadka', description:'Navštívte MUDr. Jančovú a absolvujte vstupnú zdravotnú prehliadku potvrdzujúcu spôsobilosť na danú pozíciu.', formName:'Tlačivo o zdravotnej spôsobilosti', whereConfirm:'potvrdí lekárka priamo na mieste', roomId:r6.id},
+    {order:5, title:'Vyzdvihnutie pracovného odevu', description:'V sklade OOPP si vyzdvihnite pracovný odev, obuv a ochranné pomôcky podľa vašej pozície.', formName:'Potvrdenie o prevzatí OOPP', whereConfirm:'sklad OOPP, dvere č. 3', roomId:r5.id, questionnaireType:'clothing'},
+    {order:6, title:'Vstupná zdravotná prehliadka', description:'Navštívte MUDr. Jančovú a absolvujte vstupnú zdravotnú prehliadku potvrdzujúcu spôsobilosť na danú pozíciu.', formName:'Tlačivo o zdravotnej spôsobilosti', whereConfirm:'potvrdí lekárka priamo na mieste', roomId:r6.id, questionnaireType:'health'},
     {order:7, title:'Školenie BOZP a požiarnej ochrany', description:'Absolvujte povinné vstupné školenie bezpečnosti práce a požiarnej ochrany.', formName:'Záznam o školení BOZP a PO', whereConfirm:'referent BOZP, dvere č. 15', roomId:r7.id},
-    {order:8, title:'Vydanie stravovacej karty', description:'V jedálni si vyzdvihnite stravovaciu kartu a dozviete sa viac o stravovacom systéme.', formName:'', whereConfirm:'jedáleň, dvere č. 6', roomId:r8.id},
+    {order:8, title:'Vydanie stravovacej karty', description:'V jedálni si vyzdvihnite stravovaciu kartu a dozviete sa viac o stravovacom systéme.', formName:'', whereConfirm:'jedáleň, dvere č. 6', roomId:r8.id, questionnaireType:'meal'},
     {order:9, title:'Predstavenie na pracovisku', description:'Majster zmeny vás predstaví tímu a ukáže vaše konkrétne pracovisko a stroje.', formName:'', whereConfirm:'majster zmeny, dvere č. 20', roomId:r9.id},
     {order:10, title:'Praktické zaškolenie na pozícii', description:'Skúsený kolega vás prevedie praktickým zaškolením priamo na vašej pracovnej pozícii.', formName:'Záznam o zaškolení', whereConfirm:'mentor, dvere č. 22', roomId:r10.id},
     {order:11, title:'Informácie o odboroch a sociálnom fonde', description:'Dobrovoľné stretnutie s odborovým zástupcom o členstve a čerpaní zo sociálneho fondu.', formName:'', whereConfirm:'odborový zväz, dvere č. 18', roomId:r11.id},
@@ -1611,8 +1571,8 @@ document.getElementById('adminTabbar').addEventListener('click', e=>{
   document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('apanel-'+btn.dataset.atab).classList.add('active');
   if(btn.dataset.atab==='stats') renderStats();
-  if(btn.dataset.atab==='log') renderLog();
   if(btn.dataset.atab==='apps') renderApps();
+  if(btn.dataset.atab==='quest') renderQuest();
 });
 document.getElementById('cmsSubnav').addEventListener('click', e=>{
   const btn = e.target.closest('[data-csub]');
@@ -2125,7 +2085,7 @@ const I18N = {
     'onb.sub':'Plán budovy, kontakty a presné kroky, ktoré vás čakajú po nástupe.','onb.editBtn':'Upraviť obsah',
     'onb.planTitle':'Plán budovy','onb.hint':'Kliknite na krok vpravo — miestnosť sa zvýrazní na pláne.','onb.loading':'Plán sa načítava…',
     'onb.addRoom':'+ Pridať miestnosť','onb.stepsTitle':'Postup krokov','onb.addStep':'+ Pridať krok',
-    'onb.footer':'Poznámka: plán budovy je zatiaľ orientačný a bude nahradený reálnym pôdorysom.',
+    'onb.footer':'Poznámka: plán budovy je zatiaľ orientačný a bude nahradený reálnym pôdorysom.','onb.footer2':'Kroky postupu môžete upraviť v admin režime.',
     'fd.title':'Váš prvý pracovný deň v RONA','fd.intro':'Zopár praktických vecí, aby prvý deň prebehol hladko — a presná cesta, kam za kým máte v prvý deň ísť.',
     'fd.bringTitle':'Čo si priniesť','fd.dressTitle':'Dress code','fd.parkingTitle':'Parkovanie',
     'fd.journeyTitle':'Vaša cesta v prvý deň — kam za kým ísť',
@@ -2178,7 +2138,7 @@ const I18N = {
     'onb.sub':'Building plan, contacts, and the exact steps waiting for you after joining.','onb.editBtn':'Edit content',
     'onb.planTitle':'Building plan','onb.hint':'Click a step on the right — the room will be highlighted on the plan.','onb.loading':'Loading plan…',
     'onb.addRoom':'+ Add room','onb.stepsTitle':'Process steps','onb.addStep':'+ Add step',
-    'onb.footer':'Note: the building plan is currently a placeholder and will be replaced with the real floor plan.',
+    'onb.footer':'Note: the building plan is currently a placeholder and will be replaced with the real floor plan.','onb.footer2':'You can edit the steps in admin mode.',
     'fd.title':'Your first working day at RONA','fd.intro':'A few practical things to make your first day go smoothly — and the exact route of who to see and where.',
     'fd.bringTitle':'What to bring','fd.dressTitle':'Dress code','fd.parkingTitle':'Parking',
     'fd.journeyTitle':'Your first-day journey — who to see, where',
@@ -2231,7 +2191,7 @@ const I18N = {
     'onb.sub':'План будівлі, контакти та точні кроки, які на вас чекають після працевлаштування.','onb.editBtn':'Редагувати вміст',
     'onb.planTitle':'План будівлі','onb.hint':'Натисніть на крок праворуч — приміщення підсвітиться на плані.','onb.loading':'План завантажується…',
     'onb.addRoom':'+ Додати приміщення','onb.stepsTitle':'Порядок кроків','onb.addStep':'+ Додати крок',
-    'onb.footer':'Примітка: план будівлі поки орієнтовний і буде замінений на реальне планування.',
+    'onb.footer':'Примітка: план будівлі поки орієнтовний і буде замінений на реальне планування.','onb.footer2':'Кроки можна редагувати в режимі адміністратора.',
     'fd.title':'Ваш перший робочий день у RONA','fd.intro':'Кілька практичних порад, щоб перший день пройшов гладко — і точний маршрут, до кого і куди звертатися.',
     'fd.bringTitle':'Що взяти з собою','fd.dressTitle':'Дрес-код','fd.parkingTitle':'Паркування',
     'fd.journeyTitle':'Ваш маршрут першого дня — до кого і куди звертатися',
@@ -2263,6 +2223,148 @@ document.getElementById('langSwitch').addEventListener('click', e=>{
 });
 window.t = t;
 applyLanguage(currentLang);
+
+/* ================= QUESTIONNAIRES ================= */
+const QTYPE_TITLE_MAP = {
+  'Vyzdvihnutie pracovného odevu':'clothing',
+  'Vstupná zdravotná prehliadka':'health',
+  'Vydanie stravovacej karty':'meal'
+};
+async function attachQuestionnaireTypesIfMissing(){
+  try{
+    const snap = await getDocs(collection(db,'onboarding_steps'));
+    for(const d of snap.docs){
+      const data = d.data();
+      const qtype = QTYPE_TITLE_MAP[data.title];
+      if(qtype && data.questionnaireType !== qtype){
+        await updateDoc(doc(db,'onboarding_steps', d.id), {questionnaireType: qtype});
+      }
+    }
+  }catch(e){ /* must never break the app */ }
+}
+
+function openQuestionnaire(qtype){
+  let html = '';
+  if(qtype==='health'){
+    html = `
+      <h3>Dotazník zdravotnej spôsobilosti</h3>
+      <div class="modal-sub">Vyplňte pred vstupnou zdravotnou prehliadkou</div>
+      <div class="field"><label>Meno a priezvisko *</label><input id="qhName"></div>
+      <div class="field"><label>Máte niektoré z týchto ochorení? (zaškrtnite, ak áno)</label>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:6px;">
+          <label style="font-weight:400; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="qhHeart"> Srdcovo-cievne ochorenie</label>
+          <label style="font-weight:400; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="qhDiabetes"> Cukrovka</label>
+          <label style="font-weight:400; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="qhEpilepsy"> Epilepsia</label>
+          <label style="font-weight:400; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="qhAllergy"> Alergie</label>
+        </div>
+      </div>
+      <div class="field"><label>Užívate pravidelne lieky? Ak áno, uveďte aké.</label><textarea id="qhMeds"></textarea></div>
+      <div class="field"><label>Máte obmedzenia pri fyzickej práci?</label><textarea id="qhLimits"></textarea></div>
+      <div class="checkbox-row"><input type="checkbox" id="qhGdpr"><label for="qhGdpr">Súhlasím so spracovaním týchto zdravotných údajov (osobitná kategória osobných údajov) na účel posúdenia zdravotnej spôsobilosti, v súlade s GDPR. *</label></div>
+      <button class="btn btn-primary" id="qSubmitBtn" style="width:100%; justify-content:center;">Odoslať dotazník</button>`;
+  } else if(qtype==='clothing'){
+    html = `
+      <h3>Potvrdenie prevzatia pracovného odevu</h3>
+      <div class="field"><label>Meno a priezvisko *</label><input id="qcName"></div>
+      <div class="field"><label>Veľkosť odevu</label><input id="qcSize" placeholder="napr. L, 42, atď."></div>
+      <div class="field"><label>Prevzaté položky</label>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:6px;">
+          <label style="font-weight:400; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="qcJacket"> Pracovná bunda/blúza</label>
+          <label style="font-weight:400; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="qcPants"> Pracovné nohavice</label>
+          <label style="font-weight:400; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="qcShoes"> Pracovná obuv</label>
+          <label style="font-weight:400; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="qcGloves"> Rukavice</label>
+          <label style="font-weight:400; display:flex; gap:8px; align-items:center;"><input type="checkbox" id="qcHelmet"> Prilba / ochrana hlavy</label>
+        </div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="qcConfirm"><label for="qcConfirm">Potvrdzujem, že som prevzal/a vyššie uvedený pracovný odev a ochranné pomôcky. *</label></div>
+      <button class="btn btn-primary" id="qSubmitBtn" style="width:100%; justify-content:center;">Odoslať potvrdenie</button>`;
+  } else if(qtype==='meal'){
+    html = `
+      <h3>Potvrdenie vydania stravovacej karty</h3>
+      <div class="field"><label>Meno a priezvisko *</label><input id="qmName"></div>
+      <div class="field"><label>Číslo karty (nepovinné)</label><input id="qmCard"></div>
+      <div class="checkbox-row"><input type="checkbox" id="qmConfirm"><label for="qmConfirm">Potvrdzujem, že mi bola vydaná stravovacia karta. *</label></div>
+      <button class="btn btn-primary" id="qSubmitBtn" style="width:100%; justify-content:center;">Odoslať potvrdenie</button>`;
+  } else { return; }
+  document.getElementById('questionnaireBody').innerHTML = html;
+  document.getElementById('questionnaireOverlay').classList.add('active');
+  document.getElementById('qSubmitBtn').addEventListener('click', ()=>submitQuestionnaire(qtype));
+}
+
+async function submitQuestionnaire(qtype){
+  let data = null;
+  if(qtype==='health'){
+    const name = document.getElementById('qhName').value.trim();
+    if(!name || !document.getElementById('qhGdpr').checked){ alert('Vyplňte meno a súhlas so spracovaním údajov.'); return; }
+    data = {type:'health', name,
+      heart:document.getElementById('qhHeart').checked, diabetes:document.getElementById('qhDiabetes').checked,
+      epilepsy:document.getElementById('qhEpilepsy').checked, allergy:document.getElementById('qhAllergy').checked,
+      meds:document.getElementById('qhMeds').value, limits:document.getElementById('qhLimits').value, ts:new Date().toISOString()};
+  } else if(qtype==='clothing'){
+    const name = document.getElementById('qcName').value.trim();
+    if(!name || !document.getElementById('qcConfirm').checked){ alert('Vyplňte meno a potvrďte prevzatie.'); return; }
+    data = {type:'clothing', name, size:document.getElementById('qcSize').value,
+      jacket:document.getElementById('qcJacket').checked, pants:document.getElementById('qcPants').checked,
+      shoes:document.getElementById('qcShoes').checked, gloves:document.getElementById('qcGloves').checked,
+      helmet:document.getElementById('qcHelmet').checked, ts:new Date().toISOString()};
+  } else if(qtype==='meal'){
+    const name = document.getElementById('qmName').value.trim();
+    if(!name || !document.getElementById('qmConfirm').checked){ alert('Vyplňte meno a potvrďte prevzatie.'); return; }
+    data = {type:'meal', name, card:document.getElementById('qmCard').value, ts:new Date().toISOString()};
+  }
+  if(!data) return;
+  try{
+    await addDoc(collection(db,'questionnaire_responses'), data);
+    const labels = {health:'Dotazník zdravotnej spôsobilosti', clothing:'Potvrdenie prevzatia pracovného odevu', meal:'Potvrdenie vydania stravovacej karty'};
+    await logActivity('questionnaire', labels[qtype], `Vyplnil: ${data.name}`);
+  }catch(e){}
+  document.getElementById('questionnaireOverlay').classList.remove('active');
+  alert('Ďakujeme, dotazník bol odoslaný.');
+}
+document.getElementById('questionnaireClose').addEventListener('click', ()=>document.getElementById('questionnaireOverlay').classList.remove('active'));
+document.getElementById('questionnaireOverlay').addEventListener('click', e=>{ if(e.target.id==='questionnaireOverlay') e.currentTarget.classList.remove('active'); });
+
+/* ================= ADMIN: QUESTIONNAIRE RESPONSES ================= */
+let questCache = [];
+let questTypeFilter = 'all';
+onSnapshot(collection(db,'questionnaire_responses'), snap=>{
+  questCache = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=>(b.ts||'').localeCompare(a.ts||''));
+  renderQuest();
+});
+document.getElementById('questTypeFilter').addEventListener('click', e=>{
+  const btn = e.target.closest('[data-qtype]');
+  if(!btn) return;
+  document.querySelectorAll('#questTypeFilter .chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  questTypeFilter = btn.dataset.qtype;
+  renderQuest();
+});
+const QTYPE_LABELS = {health:'Zdravotná spôsobilosť', clothing:'Pracovný odev', meal:'Stravovacia karta'};
+function questSummary(q){
+  if(q.type==='health'){
+    const flags = [q.heart&&'srdcovo-cievne', q.diabetes&&'cukrovka', q.epilepsy&&'epilepsia', q.allergy&&'alergie'].filter(Boolean).join(', ');
+    return flags ? `Ochorenia: ${flags}` : 'Bez uvedených ochorení';
+  }
+  if(q.type==='clothing'){
+    const items = [q.jacket&&'bunda', q.pants&&'nohavice', q.shoes&&'obuv', q.gloves&&'rukavice', q.helmet&&'prilba'].filter(Boolean).join(', ');
+    return `Veľkosť: ${q.size||'—'} · Položky: ${items||'—'}`;
+  }
+  if(q.type==='meal') return `Číslo karty: ${q.card||'—'}`;
+  return '';
+}
+function renderQuest(){
+  const el = document.getElementById('questList');
+  if(!el) return;
+  const list = questTypeFilter==='all' ? questCache : questCache.filter(q=>q.type===questTypeFilter);
+  el.innerHTML = list.map(q=>`
+    <div class="app-item"><div class="app-top"><span>${q.name||''} <span class="status-pill kontaktovany">${QTYPE_LABELS[q.type]||q.type}</span></span><span>${(q.ts||'').replace('T',' ').slice(0,16)}</span></div>
+      <div class="app-meta">${questSummary(q)}</div></div>`).join('') || '<div class="onb-empty-msg">Zatiaľ žiadne vyplnené dotazníky.</div>';
+}
+document.getElementById('exportQuestBtn').addEventListener('click', ()=>{
+  const list = questTypeFilter==='all' ? questCache : questCache.filter(q=>q.type===questTypeFilter);
+  downloadCsv('rona-dotazniky.csv', ['Typ','Meno','Detaily','Čas'],
+    list.map(q=>[QTYPE_LABELS[q.type]||q.type, q.name, questSummary(q), q.ts]));
+});
 </script>
 </body>
 </html>
