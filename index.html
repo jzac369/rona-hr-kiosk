@@ -501,6 +501,29 @@ button{font-family:inherit; cursor:pointer;}
   .about-grid, .form-wrap{grid-template-columns:1fr;}
   .contact-grid{grid-template-columns:1fr 1fr;}
 }
+/* ============ BACK BUTTON ============ */
+.back-btn{
+  display:inline-flex; align-items:center; gap:7px;
+  border:none; border-radius:10px; padding:10px 18px; font-weight:700; font-size:0.665rem;
+  color:#fff; margin-bottom:18px; transition:transform .12s ease;
+}
+.back-btn:active{transform:scale(0.96);}
+.back-btn svg{width:14px; height:14px;}
+.back-btn.back-t1{background:linear-gradient(135deg, var(--maroon-700), var(--maroon-600));}
+.back-btn.back-t2{background:linear-gradient(135deg, var(--maroon-600), var(--maroon-500));}
+.back-btn.back-t3{background:linear-gradient(135deg, #8A6710, var(--gold-500));}
+.back-btn.back-t4{background:linear-gradient(135deg, var(--ink-700), var(--ink-900));}
+
+/* ============ FAQ PAGINATION ============ */
+.pagination{display:flex; gap:8px; justify-content:center; margin-top:22px;}
+.page-btn{width:38px; height:38px; border-radius:10px; border:1.5px solid var(--cream-200); background:#fff; font-weight:700; font-size:0.85rem; color:var(--ink-700);}
+.page-btn.active{background:var(--maroon-600); border-color:var(--maroon-600); color:#fff;}
+.page-btn:disabled{opacity:0.35;}
+
+/* ============ TOPBAR LANGUAGE SWITCH ============ */
+.a11y .lang-switch{display:flex; gap:6px; margin-top:0;}
+.a11y .lang-btn{padding:8px 14px; border-radius:10px; border:1.5px solid var(--cream-200); background:#fff; color:var(--ink-700); font-size:0.78rem; font-weight:800;}
+.a11y .lang-btn.active{background:var(--maroon-600); border-color:var(--maroon-600); color:#fff;}
 </style>
 </head>
 <body>
@@ -553,11 +576,6 @@ button{font-family:inherit; cursor:pointer;}
     <div class="sidebar-foot">
       <div class="clock" id="clock">--:--</div>
       <div class="date" id="dateStr">—</div>
-      <div class="lang-switch" id="langSwitch">
-        <button class="lang-btn active" data-lang="sk">SK</button>
-        <button class="lang-btn" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="uk">UA</button>
-      </div>
       <button class="admin-link" id="adminLinkBtn"><span id="adminLinkIcon">🔒</span> <span id="adminLinkLabel" data-i18n="admin.login">Admin prihlásenie</span></button>
       <div class="admin-status" id="adminStatus" style="display:none;"></div>
     </div>
@@ -571,8 +589,11 @@ button{font-family:inherit; cursor:pointer;}
         <h1 id="pageTitle">Vitajte v RONA</h1>
       </div>
       <div class="a11y">
-        <button id="fontDown" title="Zmenšiť text">A-</button>
-        <button id="fontUp" title="Zväčšiť text">A+</button>
+        <div class="lang-switch" id="langSwitch">
+          <button class="lang-btn active" data-lang="sk">SK</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="uk">UA</button>
+        </div>
       </div>
     </div>
 
@@ -611,6 +632,7 @@ button{font-family:inherit; cursor:pointer;}
 
     <!-- POSITIONS -->
     <section class="view" id="view-positions">
+      <button class="back-btn back-t2" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M11 5 4 12l7 7M4 12h16"/></svg><span data-i18n="btn.back">Späť</span></button>
       <div class="filter-row" id="filterRow">
         <button class="chip active" data-filter="all" data-i18n="pos.all">Všetky pozície</button>
         <button class="chip" data-filter="vyroba" data-i18n="pos.vyroba">Výroba</button>
@@ -748,6 +770,7 @@ button{font-family:inherit; cursor:pointer;}
 
     <!-- ONBOARDING -->
     <section class="view" id="view-onboarding">
+      <button class="back-btn back-t1" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M11 5 4 12l7 7M4 12h16"/></svg><span data-i18n="btn.back">Späť</span></button>
       <div class="onb-head">
         <div>
           <div class="sub" data-i18n="onb.sub">Plán budovy, kontakty a presné kroky, ktoré vás čakajú po nástupe.</div>
@@ -810,12 +833,15 @@ button{font-family:inherit; cursor:pointer;}
 
     <!-- FAQ -->
     <section class="view" id="view-faq">
+      <button class="back-btn back-t4" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M11 5 4 12l7 7M4 12h16"/></svg><span data-i18n="btn.back">Späť</span></button>
       <div class="section-head"><h3 data-i18n="faq.title">Časté otázky uchádzačov</h3></div>
       <div id="faqList"></div>
+      <div class="pagination" id="faqPagination"></div>
     </section>
 
     <!-- CONTACT -->
     <section class="view" id="view-contact">
+      <button class="back-btn back-t3" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M11 5 4 12l7 7M4 12h16"/></svg><span data-i18n="btn.back">Späť</span></button>
       <div class="section-head"><h3 data-i18n="contact.title">HR oddelenie RONA</h3></div>
       <div class="contact-grid" id="contactGrid"></div>
       <div class="info-strip">
@@ -1027,7 +1053,17 @@ const FAQS = [
   {q:'Ponúkate brigády alebo skrátený úväzok?', a:'Pri niektorých pozíciách (napr. upratovanie, sklad) je možný aj skrátený úväzok. Informujte sa priamo u HR tímu.'},
   {q:'Od akého veku môžem nastúpiť?', a:'Štandardne prijímame uchádzačov od 18 rokov. Pri niektorých administratívnych pozíciách je možná aj spolupráca pre študentov.'},
   {q:'Poskytujete zaučenie pre nové pozície?', a:'Áno, pri nástupe vás sprevádza skúsený kolega a máte k dispozícii štruktúrovaný zaškoľovací program.'},
-  {q:'Ako si dohodnem osobnú prehliadku prevádzky?', a:'Stačí zanechať kontakt v sekcii „Mám záujem“ alebo osloviť HR tím priamo — prehliadku radi zorganizujeme spolu s pohovorom.'}
+  {q:'Ako si dohodnem osobnú prehliadku prevádzky?', a:'Stačí zanechať kontakt v sekcii „Mám záujem“ alebo osloviť HR tím priamo — prehliadku radi zorganizujeme spolu s pohovorom.'},
+  {q:'Ako prebieha výplata mzdy?', a:'Mzda sa vypláca bezhotovostne na bankový účet, vždy k stanovenému výplatnému termínu. Presný dátum vám oznámi mzdová účtáreň pri nástupe.'},
+  {q:'Ako dlho trvá skúšobná doba?', a:'Štandardná skúšobná doba je 3 mesiace. Počas nej môže pracovný pomer ukončiť ktorákoľvek zo strán aj bez udania dôvodu.'},
+  {q:'Môžem si vziať dovolenku počas skúšobnej doby?', a:'Nárok na dovolenku vzniká postupne od prvého dňa nástupu, takže krátku dovolenku je možné čerpať po dohode s nadriadeným aj počas skúšobnej doby.'},
+  {q:'Ponúkate ubytovanie pre zamestnancov mimo regiónu?', a:'Priamo firemné ubytovanie neponúkame, no HR tím vám vie odporučiť overené možnosti bývania v okolí Lednických Rovní a Piešťan.'},
+  {q:'Aké sú možnosti kariérneho rastu vo výrobe?', a:'Po zapracovaní je možný postup napríklad z pozície odnášača na strojníka či zoraďovača. Rast prebieha na základe skúseností a záujmu zamestnanca.'},
+  {q:'Musím mať vlastné ochranné pomôcky?', a:'Nie, pracovný odev aj ochranné pomôcky (OOPP) dostanete od firmy pri nástupe, zdarma.'},
+  {q:'Dá sa po nástupe zmeniť pracovná pozícia?', a:'Áno, ak sa uvoľní vhodné miesto a zamestnanec prejaví záujem, presun medzi pozíciami je po dohode s nadriadeným možný.'},
+  {q:'Môžem priniesť odporúčanie od súčasného zamestnanca?', a:'Áno, odporúčanie od kolegu radi zohľadníme — stačí ho spomenúť v poznámke pri podaní záujmu alebo priamo na pohovore.'},
+  {q:'Čo ak ochoriem počas skúšobnej doby?', a:'Práceneschopnosť sa rieši rovnako ako u ostatných zamestnancov — nahláste ju čo najskôr HR oddeleniu, ktoré vás prevedie ďalším postupom.'},
+  {q:'Je možné pracovať na zmeny len cez víkend?', a:'Pri niektorých pozíciách je možná aj víkendová brigáda — konkrétnu dostupnosť takéhoto úväzku vám potvrdí HR tím podľa aktuálnej potreby.'}
 ];
 
 const CONTACTS = [
@@ -1068,15 +1104,41 @@ function renderBenefits(){
     </div>`).join('');
 }
 
+const FAQ_PAGE_SIZE = 5;
+let faqPage = 1;
 function renderFaq(){
-  document.getElementById('faqList').innerHTML = FAQS.map((f,i)=>`
-    <div class="faq-item" data-i="${i}">
+  const totalPages = Math.max(1, Math.ceil(FAQS.length / FAQ_PAGE_SIZE));
+  if(faqPage > totalPages) faqPage = totalPages;
+  const start = (faqPage-1) * FAQ_PAGE_SIZE;
+  const pageItems = FAQS.slice(start, start + FAQ_PAGE_SIZE);
+  document.getElementById('faqList').innerHTML = pageItems.map((f,i)=>`
+    <div class="faq-item" data-i="${start+i}">
       <button class="faq-q">${f.q}${svgIcon('<path d="M5 12h14M12 5v14"/>')}</button>
       <div class="faq-a"><p>${f.a}</p></div>
     </div>`).join('');
   document.querySelectorAll('.faq-q').forEach(btn=>{
     btn.addEventListener('click',()=>btn.parentElement.classList.toggle('open'));
   });
+  renderFaqPagination(totalPages);
+}
+function renderFaqPagination(totalPages){
+  const el = document.getElementById('faqPagination');
+  if(!el) return;
+  if(totalPages<=1){ el.innerHTML=''; return; }
+  let html = `<button class="page-btn" data-faqpage="prev" ${faqPage===1?'disabled':''}>‹</button>`;
+  for(let p=1;p<=totalPages;p++){
+    html += `<button class="page-btn ${p===faqPage?'active':''}" data-faqpage="${p}">${p}</button>`;
+  }
+  html += `<button class="page-btn" data-faqpage="next" ${faqPage===totalPages?'disabled':''}>›</button>`;
+  el.innerHTML = html;
+  el.querySelectorAll('[data-faqpage]').forEach(b=>b.addEventListener('click', ()=>{
+    const v = b.dataset.faqpage;
+    if(v==='prev') faqPage = Math.max(1, faqPage-1);
+    else if(v==='next') faqPage = Math.min(totalPages, faqPage+1);
+    else faqPage = parseInt(v);
+    renderFaq();
+    document.getElementById('view-faq').scrollTop = 0;
+  }));
 }
 
 function renderContacts(){
@@ -1204,12 +1266,6 @@ document.getElementById('applyForm').addEventListener('submit', e=>{
   e.target.reset();
 });
 document.getElementById('backHomeBtn').addEventListener('click', ()=>switchView('home'));
-
-/* accessibility font scale */
-let scale = 1;
-function applyScale(){ document.documentElement.style.setProperty('--scale', scale); }
-document.getElementById('fontUp').addEventListener('click', ()=>{ scale = Math.min(1.25, scale+0.08); applyScale(); });
-document.getElementById('fontDown').addEventListener('click', ()=>{ scale = Math.max(0.9, scale-0.08); applyScale(); });
 
 /* clock */
 function tickClock(){
@@ -2032,7 +2088,7 @@ const I18N = {
     'home.welcome':'Vitajte v RONA','home.chooseAction':'Vyberte si, s čím vám môžeme pomôcť',
     'home.tile1desc':'Plán budovy, kam ísť a čo si vziať','home.tile2desc':'Prehľad aktuálne otvorených pozícií',
     'home.tile3title':'Kontaktujte HR','home.tile3desc':'Telefón, e-mail a úradné hodiny','home.tile4desc':'Odpovede na najčastejšie otázky',
-    'home.gdprFooter':'RONA a.s. · Informačný systém HR oddelenia · Vaše údaje spracúvame v súlade s GDPR',
+    'home.gdprFooter':'RONA a.s. · Informačný systém HR oddelenia · Vaše údaje spracúvame v súlade s GDPR','btn.back':'Späť',
     'home.qc1t':'Benefity zamestnancov','home.qc1d':'Stravovanie, doprava, 13. plat a ďalšie výhody.',
     'home.qc2t':'Ako prebieha nábor','home.qc2d':'Od prihlásenia po prvý pracovný deň v 5 krokoch.',
     'home.qc3t':'Časté otázky','home.qc3d':'Vek, prax, zmennosť, brigády a iné odpovede.',
@@ -2085,7 +2141,7 @@ const I18N = {
     'home.welcome':'Welcome to RONA','home.chooseAction':'Choose what we can help you with',
     'home.tile1desc':'Building plan, where to go and what to bring','home.tile2desc':'Overview of currently open positions',
     'home.tile3title':'Contact HR','home.tile3desc':'Phone, email and office hours','home.tile4desc':'Answers to the most common questions',
-    'home.gdprFooter':'RONA a.s. · HR department information system · Your data is processed in accordance with GDPR',
+    'home.gdprFooter':'RONA a.s. · HR department information system · Your data is processed in accordance with GDPR','btn.back':'Back',
     'home.qc1t':'Employee benefits','home.qc1d':'Meals, transport, 13th salary and more.',
     'home.qc2t':'How hiring works','home.qc2d':'From application to your first day, in 5 steps.',
     'home.qc3t':'FAQ','home.qc3d':'Age, experience, shifts, temp work and more.',
@@ -2138,7 +2194,7 @@ const I18N = {
     'home.welcome':'Ласкаво просимо до RONA','home.chooseAction':'Оберіть, з чим вам допомогти',
     'home.tile1desc':'План будівлі, куди йти і що взяти','home.tile2desc':'Огляд актуальних вакансій',
     'home.tile3title':'Зв\'язатися з HR','home.tile3desc':'Телефон, e-mail та робочі години','home.tile4desc':'Відповіді на часті запитання',
-    'home.gdprFooter':'RONA a.s. · Інформаційна система відділу кадрів · Ваші дані обробляються відповідно до GDPR',
+    'home.gdprFooter':'RONA a.s. · Інформаційна система відділу кадрів · Ваші дані обробляються відповідно до GDPR','btn.back':'Назад',
     'home.qc1t':'Пільги для працівників','home.qc1d':'Харчування, транспорт, 13-та зарплата та інше.',
     'home.qc2t':'Як відбувається найм','home.qc2d':'Від подання заявки до першого робочого дня — 5 кроків.',
     'home.qc3t':'Часті запитання','home.qc3d':'Вік, досвід, змінність, тимчасова робота та інше.',
